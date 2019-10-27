@@ -3,13 +3,14 @@ const roleUpgrader = require('./role.upgrader');
 const roleBuilder = require('./role.builder');
 
 module.exports.loop = function () {
-    
+
     // TODO: set up some error reporting mechanism that doesn't rely on the console. 
     // Probably in a debug object in memory. Maybe send a mail for the more important ones.
     // TODO: change the way harvesters work: make them sit at a source and extract forever, then have haulers come pick up the energy.
     // This may require automatically building containers there.
     
     let ontick = [];
+    // replenish creeps
     ontick[0] = ()=>{
         const optimalCreeps = {
             'harvester': 3,
@@ -28,6 +29,7 @@ module.exports.loop = function () {
             'upgrader': 0
         };
         for (let creep in Game.creeps) {
+            // noinspection JSUnresolvedVariable
             Game.creeps[Game.creeps[creep].memory.role]++
         }
         
@@ -38,31 +40,40 @@ module.exports.loop = function () {
                     {memory: {role: role, cb: []}});        
             }
         }
-    }
+    };
+    // document source spots
     ontick[1] = ()=> {
         let room = Game.spawns['Spawn1'].room;
-        if (!room.memory.sources || room.memory.sources.v !== 1) {
-            room.memory.sources = {};
-            room.memory.sources.v = 1;
+        // This'll shut up the unresolved variable warnings
+        /** * @type {Object} */
+        let mem = room.memory;
+        if (!mem.sources || mem.sources.v !== 1) {
+            mem.sources = {};
+            mem.sources.v = 1;
             let sources = room.find(FIND_SOURCES);
             for (let sourcei in sources) {
-                let source = sources[sourcei]
-                room.memory.sources[sourcei] = {};
-                room.memory.sources[sourcei].spots = 0;
-                room.memory.sources[sourcei].id = source.id;
+                if (!sources.hasOwnProperty(sourcei)) continue;
+                let source = sources[sourcei];
+                mem.sources[sourcei] = {};
+                mem.sources[sourcei].spots = 0;
+                mem.sources[sourcei].id = source.id;
                 for (let i = -1; i <= 1; i++) {
                     for (let j = -1 ; j <= 1; j++) {
                         if (i || j) {
-                            if (!PathFinder.search(source.pos, new RoomPosition(source.pos.x + i, source.pos.y + j, source.room.name), 
-                                {maxOps: 10, maxRooms: 1, maxCost: 20}).incomplete) {
-                                room.memory.sources[sourcei].spots++;
+                            if (!PathFinder.search(
+                                    source.pos,
+                                    new RoomPosition(source.pos.x + i, source.pos.y + j, source.room.name),
+                                    {maxOps: 10, maxRooms: 1, maxCost: 20})
+                                .incomplete) {
+                                mem.sources[sourcei].spots++;
                             }
                         }
                     }
                 }
             }
         }
-    }
+    };
+    // remove memory of non-existant creeps
     ontick[2] = ()=> {
         for(let name in Memory.creeps) {
             if(!Game.creeps[name]) {
@@ -70,35 +81,35 @@ module.exports.loop = function () {
                 console.log('Clearing dead creep memory:', name);
             }
         }
-    }
+    };
+    // initialize memory of faulty creeps
     ontick[3] = ()=>{
         for (let name in Game.creeps) {
-            if (!Game.creeps[name].memory.role) {
-                console.log('anomalous creep without role found:', name)
-                Game.creeps[name].memory.role = 'harvester';
+            /** @type {Object} */
+            let creepMemory = Game.creeps[name].memory;
+            if (!creepMemory.role) {
+                console.log('anomalous creep without role found:', name);
+                creepMemory.role = 'harvester';
             }
-            if (!Game.creeps[name].memory.cb) {
-                console.log('anomalous creep without callback array found:', name)
-                Game.creeps[name].memory.cb = [];
+            if (!creepMemory.cb) {
+                console.log('anomalous creep without callback array found:', name);
+                creepMemory.cb = [];
             }
         }
-    }
+    };
     // only perform these expensive operations once every 64 ticks
     if (ontick[Game.time & 0x3F]) ontick[Game.time & 0x3F]();
     
     // for debugging
-    if (Game.spawns['Spawn1'].memory.debug && Game.spawns['Spawn1'].memory.debug.calcSources === true) {
-        Game.spawns['Spawn1'].memory.debug.calcSources = false;
-        
-        delete Game.spawns['Spawn1'].room.memory.sources;
-        ontick[1]();
+    if (Memory.debug) {
+        if (Memory.debug.setCreepMem === true) {
+            Memory.debug.setCreepMem = false;
+
+            ontick[3]();
+        }
     }
-    if (Game.spawns['Spawn1'].memory.debug && Game.spawns['Spawn1'].memory.debug.setCreepMem === true) {
-        Game.spawns['Spawn1'].memory.debug.setCreepMem = false;
-        
-        ontick[3]();
-    }
-    
+
+    // draw spawning creeps
     for (let spawn in Game.spawns) {
         if(Game.spawns[spawn].spawning) { 
             let spawningCreep = Game.creeps[Game.spawns[spawn].spawning.name];
@@ -132,9 +143,8 @@ module.exports.loop = function () {
         if (hostile) {
             tower.attack(hostile);
         } else {
-            // TODO: insert my username here
             let damaged = tower.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
-                return ((struc.owner ? struc.owner == 'annonymus' : false) 
+                return (struc.my
                      || [STRUCTURE_WALL, STRUCTURE_CONTAINER, STRUCTURE_ROAD].includes(struc.structureType))
                      && struc.hits < struc.hitsMax;
             }});
@@ -142,4 +152,4 @@ module.exports.loop = function () {
         }
     }
     
-}
+};
