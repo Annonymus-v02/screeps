@@ -15,7 +15,7 @@ module.exports = {
 	    }
         
 	    if(creep.memory.mining) {
-            utils.mine(creep);
+            utils.getEnergy(creep);
         }
         else if(!utils.storeEnergy(creep)) {
             utils.upgradeController(creep);

@@ -29,5 +29,20 @@ module.exports = {
         } else {
             return false;
         }
-    }
+    },
+    /** @param {Creep} creep **/
+    gatherEnergy: function(creep) {
+        let sources = creep.room.find(FIND_DROPPED_ENERGY);
+        if (sources.length === 0) return false;
+        if(creep.pickup(sources[0]) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        }
+        return true;
+    },
+    /** @param {Creep} creep **/
+    getEnergy: function(creep) {
+        if(!gatherEnergy(creep)) {
+            mine(creep);
+        }
+    },
 };
