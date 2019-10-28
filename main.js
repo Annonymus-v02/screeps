@@ -72,7 +72,7 @@ module.exports.loop = function () {
         };
         for (let creep in Game.creeps) {
             // noinspection JSUnresolvedVariable
-            Game.creeps[Game.creeps[creep].memory.role]++
+            creeps[Game.creeps[creep].memory.role]++
         }
         
         for (let role in creeps) {
