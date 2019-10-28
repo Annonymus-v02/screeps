@@ -79,6 +79,8 @@ module.exports = {
     getEnergy: function(creep, fromRuins = false) {
         if (fromRuins && this.salvageEnergy(creep)) return;
         if(!this.gatherEnergy(creep)) {
+            // TODO: stop mining and have the harvesters reserve a spot on their source.
+            // Also when a creep dies, unregister their spot (while deleting memory)
             this.mine(creep);
         }
     },
@@ -111,6 +113,7 @@ module.exports = {
                     }
                 }
             }
+            return mem.sources;
         }
     },
 };
