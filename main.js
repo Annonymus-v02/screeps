@@ -76,8 +76,8 @@ module.exports.loop = function () {
         for (let role in creeps) {
             if(creeps[role] < optimalCreeps[role]) {
                 let newName = role + Game.time;
-                Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
-                    {memory: {role: role, cb: []}});        
+                console.log(Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
+                    {memory: {role: role, cb: []}}));
             }
         }
     };
