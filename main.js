@@ -170,18 +170,23 @@ module.exports.loop = function () {
     for (let name in Game.creeps) {
         let creep = Game.creeps[name];
         if (creep.spawning) continue;
-        switch (creep.memory.role) {
-            case 'harvester':
-                roleHarvester.run(creep);
-                break;
-            case 'upgrader':
-                roleUpgrader.run(creep);
-                break;
-            case 'builder':
-                roleBuilder.run(creep);
-                break;
-            default:
-                console.log('Unknown role:', creep.memory.role);
+        try {
+            switch (creep.memory.role) {
+                case 'harvester':
+                    roleHarvester.run(creep);
+                    break;
+                case 'upgrader':
+                    roleUpgrader.run(creep);
+                    break;
+                case 'builder':
+                    roleBuilder.run(creep);
+                    break;
+                default:
+                    console.log('Unknown role:', creep.memory.role);
+            }
+        } catch (err) {
+            console.log(name, JSON.stringify(creep));
+            console.log(err);
         }
     }
 
