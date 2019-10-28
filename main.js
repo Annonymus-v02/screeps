@@ -100,6 +100,8 @@ module.exports.loop = function () {
             // noinspection JSUnresolvedVariable
             creeps[Game.creeps[creep].memory.role]++
         }
+
+        console.log(JSON.stringify(creeps));
         
         for (let role in creeps) {
             if (!creeps.hasOwnProperty(role)) continue;
