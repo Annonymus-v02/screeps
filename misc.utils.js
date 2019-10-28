@@ -42,7 +42,7 @@ module.exports = {
     /** @param {Creep} creep **/
     salvageEnergy: function(creep) {
         let sources = creep.room.find(FIND_RUINS, {filter: struc=>{
-            return struc.store && struc.store[energy] > 0;
+            return struc.store && struc.store[RESOURCE_ENERGY] > 0;
             }});
         if (sources.length === 0) return false;
         if(creep.withdraw(sources[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
