@@ -82,6 +82,8 @@ module.exports.loop = function () {
                 Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
                     {memory: {role: role, cb: []}});
                 break;
+            } else {
+                console.log(role, 'filled');
             }
         }
     };
