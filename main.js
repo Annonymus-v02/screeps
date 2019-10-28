@@ -1,27 +1,73 @@
+'use strict';
+
 const roleHarvester = require('./role.harvester');
 const roleUpgrader = require('./role.upgrader');
 const roleBuilder = require('./role.builder');
+
+class _CreepConstants {
+    constructor() {
+        this.optimalCreeps = {
+            'harvester': 3,
+            'builder': 2,
+            'upgrader': 1
+        }
+    }
+
+    creepBody(role, energy) {
+        // noinspection DuplicatedCode
+        const incrementalBodies = {
+            'harvester': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
+                          WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
+                          CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
+                          WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
+                          CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE],
+            'builder': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
+                        WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
+                        CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
+                        WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
+                        CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE],
+            'upgrader': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
+                         WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
+                         CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
+                         WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
+                         CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE],
+        };
+
+        let body = {cost: 0, parts: []};
+        body.add = part=>{
+            body.parts.push(part);
+            cost += BODYPART_COST[part];
+        };
+
+        for (let i = 0; body.cost <= energy; i++) {
+            body.add(incrementalBodies[role][i]);
+        }
+        body.parts.pop();
+        return body.parts;
+    }
+}
+
+const creepConstants = new _CreepConstants();
 
 module.exports.loop = function () {
 
     // TODO: set up some error reporting mechanism that doesn't rely on the console. 
     // Probably in a debug object in memory. Maybe send a mail for the more important ones.
     // TODO: change the way harvesters work: make them sit at a source and extract forever, then have haulers come pick up the energy.
-    // This may require automatically building containers there.
+    // This may require automatically building storage there.
     
     let ontick = [];
     // replenish creeps
     ontick[0] = ()=>{
-        const optimalCreeps = {
-            'harvester': 3,
-            'builder': 2,
-            'upgrader': 1
-        };
-        const creepBodies = {
-            'harvester': [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE],
-            'builder': [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE],
-            'upgrader': [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE]
-        };
+        const optimalCreeps = creepConstants.optimalCreeps;
+
+        let availableEnergy = 0;
+        // noinspection JSUnresolvedFunction
+        availableEnergy += Game.spawns['Spawn1'].store.getCapacity(RESOURCE_ENERGY);
+        let extensions = Game.find(FIND_MY_STRUCTURES, {filter: struc=>{return struc.structureType === STRUCTURE_EXTENSION}});
+        for (extension of extensions) {
+            availableEnergy += extension.store.getCapacity(RESOURCE_ENERGY);
+        }
     
         let creeps = {
             'harvester': 0,
@@ -36,7 +82,7 @@ module.exports.loop = function () {
         for (let role in creeps) {
             if(creeps[role] < optimalCreeps[role]) {
                 let newName = role + Game.time;
-                Game.spawns['Spawn1'].spawnCreep(creepBodies[role], newName, 
+                Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
                     {memory: {role: role, cb: []}});        
             }
         }

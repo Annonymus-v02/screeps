@@ -17,7 +17,6 @@ module.exports = {
     /** @param {Creep} creep **/
     storeEnergy: function(creep) {
         let stores = creep.room.find(FIND_MY_STRUCTURES, {
-            /** @param struc.store.getFreeCapacity **/
             filter: (struc) => {
                 return [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER].includes(struc.structureType) && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
