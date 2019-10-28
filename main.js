@@ -64,7 +64,7 @@ module.exports.loop = function () {
         let availableEnergy = 0;
         // noinspection JSUnresolvedFunction
         availableEnergy += Game.spawns['Spawn1'].store.getCapacity(RESOURCE_ENERGY);
-        let extensions = Game.spawns['Spawn1'].find(FIND_MY_STRUCTURES, {filter: struc=>{return struc.structureType === STRUCTURE_EXTENSION}});
+        let extensions = Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {filter: struc=>{return struc.structureType === STRUCTURE_EXTENSION}});
         for (extension of extensions) {
             availableEnergy += extension.store.getCapacity(RESOURCE_ENERGY);
         }
