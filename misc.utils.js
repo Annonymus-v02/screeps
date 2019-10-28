@@ -16,14 +16,15 @@ module.exports = {
     },
     /** @param {Creep} creep **/
     storeEnergy: function(creep) {
-        let stores = creep.room.find(FIND_MY_STRUCTURES, {
+        let store = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (struc) => {
+                // TODO: eventually add storage and containers here
                 return [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER].includes(struc.structureType) && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
-        if (stores.length > 0) {
-            if(creep.transfer(stores[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(stores[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        if (store !== null) {
+            if(creep.transfer(store, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(store, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
             return true;
         } else {
@@ -32,19 +33,19 @@ module.exports = {
     },
     /** @param {Creep} creep **/
     gatherEnergy: function(creep) {
-        let sources = creep.room.find(FIND_DROPPED_RESOURCES);
-        if (sources.length === 0) return false;
-        if(creep.pickup(sources[0]) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        let source = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+        if (source === null) return false;
+        if(creep.pickup(source) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
         return true;
     },
     /** @param {Creep} creep **/
     salvageEnergy: function(creep) {
-        let sources = creep.room.find(FIND_RUINS, {filter: struc=>{
+        let source = creep.pos.findClosestByPath(FIND_RUINS, {filter: struc=>{
             return struc.store && struc.store[RESOURCE_ENERGY] > 0;
             }});
-        if (sources.length === 0) return false;
+        if (source === null) return false;
         // noinspection JSCheckFunctionSignatures
         if(creep.withdraw(sources[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -60,15 +61,15 @@ module.exports = {
                     && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }) : [];
-        let uselessStores = creep.room.find(FIND_STRUCTURES, {
+        let uselessStore = creep.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (struc) => {
                 return [STRUCTURE_STORAGE, STRUCTURE_CONTAINER].includes(struc.structureType)
                     && struc.store[RESOURCE_ENERGY] > 0;
             }
         });
-        if (usefulStores.length > 0 && uselessStores.length > 0) {
-            if(creep.withdraw(uselessStores[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(uselessStores[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        if (usefulStores.length > 0 && uselessStore !== null) {
+            if(creep.withdraw(uselessStore, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(uselessStore, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
             return true;
         }
