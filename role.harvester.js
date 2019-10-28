@@ -4,7 +4,6 @@ const utils = require('./misc.utils');
 module.exports = {
     /** @param {Creep} creep **/
     run: function(creep) {
-        
         if(!creep.memory.mining && creep.store[RESOURCE_ENERGY] === 0) {
             creep.memory.mining = true;
             creep.say('\u{26CF}\uFE0F mine');

@@ -16,16 +16,17 @@ class _CreepConstants {
     creepBody(role, energy) {
         // noinspection DuplicatedCode
         const incrementalBodies = {
+            // TODO: make these a function
             'harvester': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
                           WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
                           CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
                           WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
                           CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE],
-            'builder': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
-                        WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
-                        CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
-                        WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
-                        CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE],
+            'builder': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK,
+                        CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY,
+                        MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE,
+                        WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK,
+                        CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY],
             'upgrader': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
                          WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
                          CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
