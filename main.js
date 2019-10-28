@@ -14,6 +14,7 @@ class _CreepConstants {
     }
 
     creepBody(role, energy) {
+        console.log('making body');
         // noinspection DuplicatedCode
         const incrementalBodies = {
             'harvester': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
@@ -43,6 +44,7 @@ class _CreepConstants {
             body.add(incrementalBodies[role][i]);
         }
         body.parts.pop();
+        console.log(body.parts);
         return body.parts;
     }
 }
