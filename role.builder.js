@@ -15,7 +15,7 @@ module.exports = {
 	    }
         
         if (!creep.memory.building) {
-            utils.getEnergy(creep);
+            utils.getEnergy(creep, true);
         } else {
             let sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
             if (sites.length !== 0) {

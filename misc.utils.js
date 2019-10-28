@@ -40,7 +40,20 @@ module.exports = {
         return true;
     },
     /** @param {Creep} creep **/
-    getEnergy: function(creep) {
+    salvageEnergy: function(creep) {
+        let sources = creep.room.find(FIND_RUINS, {filter: struc=>{
+            return struc.store && struc.store[energy] > 0;
+            }});
+        if (sources.length === 0) return false;
+        if(creep.withdraw(sources[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        }
+        return true;
+    },
+    /** @param {Creep} creep
+     * @param {Boolean} fromRuins **/
+    getEnergy: function(creep, fromRuins = false) {
+        if (fromRuins && this.salvageEnergy(creep)) return;
         if(!this.gatherEnergy(creep)) {
             this.mine(creep);
         }
