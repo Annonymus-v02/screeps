@@ -153,6 +153,9 @@ module.exports.loop = function () {
 
             ontick[3]();
         }
+        if(Memory.debug.spawnCreeps === true) {
+            ontick[0]();
+        }
     }
 
     // draw spawning creeps
