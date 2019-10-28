@@ -54,6 +54,10 @@ class _CreepConstants {
                 case 'upgrader':
                     return [CARRY, MOVE, WORK][i % 3];
                 case 'hauler':
+                    if (i === 1) {
+                        return WORK;
+                    }
+                    --i;
                     return [CARRY, CARRY, MOVE][i % 3];
             }
         };

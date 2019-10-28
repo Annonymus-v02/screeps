@@ -3,9 +3,18 @@
 module.exports = {
     /** @param {Creep} creep **/
     mine: function(creep) {
-        let sources = creep.room.find(FIND_SOURCES);
-        if(creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        // let sources = creep.room.find(FIND_SOURCES);
+        // if(creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
+        //     creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        // }
+        if (creep.memory.source) {
+            if(creep.harvest(Game.getObjectById(creep.memory.source)) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(Game.getObjectById(creep.memory.source), {visualizePathStyle: {stroke: '#ffaa00'}});
+            }
+        } else {
+            let sources = this.getSources(creep.room);
+            // TODO: assign something
+            creep.memory.source = '5bbcafbb9099fc012e63b130';
         }
     },
     /** @param {Creep} creep **/
