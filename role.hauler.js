@@ -19,6 +19,7 @@ module.exports = {
             }
         } else {
             if (!utils.storeEnergy(creep)) {
+                console.log('I should be upgrading');
                 utils.upgradeController(creep);
             }
         }
