@@ -8,7 +8,7 @@ class _CreepConstants {
     constructor() {
         this.optimalCreeps = {
             'harvester': 3,
-            'builder': 2,
+            'builder': 3,
             'upgrader': 1
         }
     }

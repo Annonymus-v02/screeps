@@ -45,6 +45,7 @@ module.exports = {
             return struc.store && struc.store[RESOURCE_ENERGY] > 0;
             }});
         if (sources.length === 0) return false;
+        // noinspection JSCheckFunctionSignatures
         if(creep.withdraw(sources[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
         }
