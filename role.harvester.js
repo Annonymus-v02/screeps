@@ -4,22 +4,14 @@ const utils = require('./misc.utils');
 module.exports = {
     /** @param {Creep} creep **/
     run: function(creep) {
-        if(!creep.memory.mining && creep.store[RESOURCE_ENERGY] === 0) {
-            creep.memory.mining = true;
-            creep.say('\u{26CF}\uFE0F mine');
-	    }
-	    if(creep.memory.mining && creep.store.getFreeCapacity() === 0) {
-	        creep.memory.mining = false;
-	        creep.say('\u{1F4E6} store');
-	    }
-        
-	    if(creep.memory.mining) {
-            utils.getEnergy(creep);
+	    if(creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+            storage = creep.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: (struc)=>{
+                return struc.store && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }});
+            if (storage.length > 0) {
+                creep.transfer(storage[0], RESOURCE_ENERGY);
+            }
         }
-        else if(!utils.storeEnergy(creep)) {
-            utils.upgradeController(creep);
-        }
+        utils.mine(creep);
 	}
 };
-
-// module.exports = roleHarvester;

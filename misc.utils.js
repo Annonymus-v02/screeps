@@ -52,11 +52,65 @@ module.exports = {
         return true;
     },
     /** @param {Creep} creep
+     * @param {Boolean} ifExistsBetter - if true, creep will only withdraw energy if there is a more useful place for it*/
+    gatherUselessEnergy: function(creep, ifExistsBetter = false)  {
+        let usefulStores = ifExistsBetter ? creep.room.find(FIND_MY_STRUCTURES, {
+            filter: (struc) => {
+                return [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER].includes(struc.structureType)
+                    && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            }
+        }) : [];
+        let uselessStores = creep.room.find(FIND_STRUCTURES, {
+            filter: (struc) => {
+                return [STRUCTURE_STORAGE, STRUCTURE_CONTAINER].includes(struc.structureType)
+                    && struc.store[RESOURCE_ENERGY] > 0;
+            }
+        });
+        if (usefulStores.length > 0 && uselessStores.length > 0) {
+            if(creep.withdraw(uselessStores[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(uselessStores[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            }
+            return true;
+        }
+        return false;
+    },
+    /** @param {Creep} creep
      * @param {Boolean} fromRuins **/
     getEnergy: function(creep, fromRuins = false) {
         if (fromRuins && this.salvageEnergy(creep)) return;
         if(!this.gatherEnergy(creep)) {
             this.mine(creep);
+        }
+    },
+    /** @param {Room} room */
+    getSources: function(room) {
+        let mem = room.memory;
+        if (mem && mem.sources && mem.sources.v === 1) {
+            return sources;
+        } else {
+            mem.sources = {};
+            mem.sources.v = 1;
+            let sources = room.find(FIND_SOURCES);
+            for (let sourcei in sources) {
+                if (!sources.hasOwnProperty(sourcei)) continue;
+                let source = sources[sourcei];
+                mem.sources[sourcei] = {};
+                mem.sources[sourcei].spots = 0;
+                mem.sources[sourcei].id = source.id;
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1 ; j <= 1; j++) {
+                        if (i || j) {
+                            if (!PathFinder.search(
+                                source.pos,
+                                new RoomPosition(source.pos.x + i, source.pos.y + j, source.room.name),
+                                {maxOps: 10, maxRooms: 1, maxCost: 20})
+                                .incomplete) {
+                                mem.sources[sourcei].spots++;
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
 };

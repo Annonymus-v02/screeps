@@ -3,35 +3,59 @@
 const roleHarvester = require('./role.harvester');
 const roleUpgrader = require('./role.upgrader');
 const roleBuilder = require('./role.builder');
+const roleHauler = require('./role.hauler');
+const utils = require("./misc.utils");
 
 class _CreepConstants {
     constructor() {
-        this.optimalCreeps = {
-            'harvester': 3,
-            'builder': 3,
-            'upgrader': 1
+        this.creepTypes = {
+            'harvester': 0,
+            'builder': 0,
+            'upgrader': 0,
+            'hauler': 0,
         }
     }
 
+    optimalCreeps(room) {
+        let opt = {
+            'harvester': 0,
+            'builder': 3,
+            'upgrader': 1,
+            'hauler': 0
+        },
+        sources = utils.getSources(room);
+        for (let source of sources) {
+            opt['harvester'] += source.spots;
+            opt['hauler'] += source.spots;
+        }
+        return opt;
+    }
+
     creepBody(role, energy) {
-        // noinspection DuplicatedCode
-        const incrementalBodies = {
-            // TODO: make these a function
-            'harvester': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
-                          WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
-                          CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
-                          WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
-                          CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE],
-            'builder': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK,
-                        CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY,
-                        MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE,
-                        WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK,
-                        CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY],
-            'upgrader': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
-                         WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
-                         CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
-                         WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK,
-                         CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE],
+        const incrementalBodies = (role, i) => {
+            switch(role) {
+                case 'harvester':
+                    if (i === 1) {
+                        return MOVE;
+                    }
+                    if (i === 2) {
+                        return CARRY;
+                    }
+                    if (i % 10 === 0) {
+                        return MOVE;
+                    }
+                    if (i % 5 === 0) {
+                        return CARRY;
+                    }
+                    i -= Math.floor(i / 5) + 2;
+                    return WORK;
+                case 'builder':
+                    return [CARRY, MOVE, WORK, CARRY, MOVE][i % 5];
+                case 'upgrader':
+                    return [CARRY, MOVE, WORK][i % 3];
+                case 'hauler':
+                    return [CARRY, CARRY, MOVE][i % 3];
+            }
         };
 
         let body = {cost: 0, parts: []};
@@ -41,7 +65,7 @@ class _CreepConstants {
         };
 
         for (let i = 0; body.cost <= energy; i++) {
-            body.add(incrementalBodies[role][i]);
+            body.add(incrementalBodies(role,i));
         }
         body.parts.pop();
         return body.parts;
@@ -57,69 +81,34 @@ module.exports.loop = function () {
     // TODO: change the way harvesters work: make them sit at a source and extract forever, then have haulers come pick up the energy.
     // This may require automatically building storage there.
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
+    // TODO: have carriers take from harvesters too.
 
     let ontick = [];
     // replenish creeps
     ontick[0] = ()=>{
         if (Game.spawns['Spawn1'].spawning) return;
-        const optimalCreeps = creepConstants.optimalCreeps;
+        const optimalCreeps = creepConstants.optimalCreeps(Game.spawns['Spawn1'].room);
 
         let availableEnergy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
     
-        let creeps = {
-            'harvester': 0,
-            'builder': 0,
-            'upgrader': 0
-        };
+        let creeps = creepConstants.creepTypes;
         for (let creep in Game.creeps) {
             // noinspection JSUnresolvedVariable
             creeps[Game.creeps[creep].memory.role]++
         }
         
         for (let role in creeps) {
+            if (!creeps.hasOwnProperty(role)) continue;
             if(creeps[role] < optimalCreeps[role]) {
-                console.log(role, 'not filled');
                 let newName = role + Game.time;
                 Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
                     {memory: {role: role, cb: []}});
                 break;
-            } else {
-                console.log(role, 'filled');
             }
         }
     };
-    // document source spots
-    ontick[1] = ()=> {
-        let room = Game.spawns['Spawn1'].room;
-        // This'll shut up the unresolved variable warnings
-        /** * @type {Object} */
-        let mem = room.memory;
-        if (!mem.sources || mem.sources.v !== 1) {
-            mem.sources = {};
-            mem.sources.v = 1;
-            let sources = room.find(FIND_SOURCES);
-            for (let sourcei in sources) {
-                if (!sources.hasOwnProperty(sourcei)) continue;
-                let source = sources[sourcei];
-                mem.sources[sourcei] = {};
-                mem.sources[sourcei].spots = 0;
-                mem.sources[sourcei].id = source.id;
-                for (let i = -1; i <= 1; i++) {
-                    for (let j = -1 ; j <= 1; j++) {
-                        if (i || j) {
-                            if (!PathFinder.search(
-                                    source.pos,
-                                    new RoomPosition(source.pos.x + i, source.pos.y + j, source.room.name),
-                                    {maxOps: 10, maxRooms: 1, maxCost: 20})
-                                .incomplete) {
-                                mem.sources[sourcei].spots++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    };
+    // UNUSED
+    ontick[1] = ()=> {};
     // remove memory of non-existant creeps
     ontick[2] = ()=> {
         for(let name in Memory.creeps) {
@@ -184,6 +173,9 @@ module.exports.loop = function () {
                 break;
             case 'builder':
                 roleBuilder.run(creep);
+                break;
+            case 'hauler':
+                roleHauler.run(creep);
                 break;
             default:
                 console.log('Unknown role:', creep.memory.role);
