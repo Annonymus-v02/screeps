@@ -34,9 +34,9 @@ class _CreepConstants {
         };
 
         let body = {cost: 0, parts: []};
-        body.add = function(part){
+        body.add = (part)=>{
             body.parts.push(part);
-            this.cost += BODYPART_COST[part];
+            body.cost += BODYPART_COST[part];
         };
 
         for (let i = 0; body.cost <= energy; i++) {
@@ -61,13 +61,7 @@ module.exports.loop = function () {
     ontick[0] = ()=>{
         const optimalCreeps = creepConstants.optimalCreeps;
 
-        let availableEnergy = 0;
-        // noinspection JSUnresolvedFunction
-        availableEnergy += Game.spawns['Spawn1'].store.getCapacity(RESOURCE_ENERGY);
-        let extensions = Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {filter: struc=>{return struc.structureType === STRUCTURE_EXTENSION}});
-        for (extension of extensions) {
-            availableEnergy += extension.store.getCapacity(RESOURCE_ENERGY);
-        }
+        let availableEnergy = Game.spawns['Spawn1'].room.energyCapacity;
     
         let creeps = {
             'harvester': 0,
