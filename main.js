@@ -81,7 +81,7 @@ module.exports.loop = function () {
     // TODO: change the way harvesters work: make them sit at a source and extract forever, then have haulers come pick up the energy.
     // This may require automatically building storage there.
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
-    // TODO: have carriers take from harvesters too.
+    // TODO: have haulers take from harvesters too.
 
     let ontick = [];
     // replenish creeps
