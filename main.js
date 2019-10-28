@@ -14,7 +14,6 @@ class _CreepConstants {
     }
 
     creepBody(role, energy) {
-        console.log('making body');
         // noinspection DuplicatedCode
         const incrementalBodies = {
             'harvester': [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE,
@@ -36,7 +35,6 @@ class _CreepConstants {
 
         let body = {cost: 0, parts: []};
         body.add = (part)=>{
-            console.log('adding', part);
             body.parts.push(part);
             body.cost += BODYPART_COST[part];
         };
@@ -45,7 +43,6 @@ class _CreepConstants {
             body.add(incrementalBodies[role][i]);
         }
         body.parts.pop();
-        console.log(body.parts);
         return body.parts;
     }
 }
@@ -65,7 +62,7 @@ module.exports.loop = function () {
         if (Game.spawns['Spawn1'].spawning) return;
         const optimalCreeps = creepConstants.optimalCreeps;
 
-        let availableEnergy = Game.spawns['Spawn1'].room.energyCapacity;
+        let availableEnergy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
     
         let creeps = {
             'harvester': 0,
@@ -80,7 +77,6 @@ module.exports.loop = function () {
         for (let role in creeps) {
             if(creeps[role] < optimalCreeps[role]) {
                 let newName = role + Game.time;
-                console.log(creepConstants.creepBody(role, availableEnergy), newName, availableEnergy);
                 Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
                     {memory: {role: role, cb: []}});
                 break;
