@@ -59,6 +59,7 @@ module.exports.loop = function () {
     let ontick = [];
     // replenish creeps
     ontick[0] = ()=>{
+        if (Game.spawns['Spawn1'].spawning) return;
         const optimalCreeps = creepConstants.optimalCreeps;
 
         let availableEnergy = Game.spawns['Spawn1'].room.energyCapacity;
@@ -76,8 +77,10 @@ module.exports.loop = function () {
         for (let role in creeps) {
             if(creeps[role] < optimalCreeps[role]) {
                 let newName = role + Game.time;
-                console.log(Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
-                    {memory: {role: role, cb: []}}));
+                console.log(creepConstants.creepBody(role, availableEnergy), newName);
+                Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
+                    {memory: {role: role, cb: []}});
+                break;
             }
         }
     };
