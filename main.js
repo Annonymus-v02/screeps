@@ -154,6 +154,7 @@ module.exports.loop = function () {
             ontick[3]();
         }
         if(Memory.debug.spawnCreeps === true) {
+            Memory.debug.spawnCreeps = false;
             ontick[0]();
         }
     }
