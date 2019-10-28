@@ -79,14 +79,14 @@ module.exports = {
     getEnergy: function(creep, fromRuins = false) {
         if (fromRuins && this.salvageEnergy(creep)) return;
         if(!this.gatherEnergy(creep)) {
-            this.mine(creep);
+            //this.mine(creep);
         }
     },
     /** @param {Room} room */
     getSources: function(room) {
         let mem = room.memory;
         if (mem && mem.sources && mem.sources.v === 1) {
-            return sources;
+            return mem.sources;
         } else {
             mem.sources = {};
             mem.sources.v = 1;
