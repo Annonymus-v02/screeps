@@ -41,8 +41,8 @@ module.exports = {
     },
     /** @param {Creep} creep **/
     getEnergy: function(creep) {
-        if(!gatherEnergy(creep)) {
-            mine(creep);
+        if(!this.gatherEnergy(creep)) {
+            this.mine(creep);
         }
     },
 };
