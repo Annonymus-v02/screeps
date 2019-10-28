@@ -36,6 +36,7 @@ class _CreepConstants {
 
         let body = {cost: 0, parts: []};
         body.add = (part)=>{
+            console.log('adding', part);
             body.parts.push(part);
             body.cost += BODYPART_COST[part];
         };
@@ -79,7 +80,7 @@ module.exports.loop = function () {
         for (let role in creeps) {
             if(creeps[role] < optimalCreeps[role]) {
                 let newName = role + Game.time;
-                console.log(creepConstants.creepBody(role, availableEnergy), newName);
+                console.log(creepConstants.creepBody(role, availableEnergy), newName, availableEnergy);
                 Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
                     {memory: {role: role, cb: []}});
                 break;
