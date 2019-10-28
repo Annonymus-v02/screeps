@@ -87,11 +87,11 @@ module.exports = {
     /** @param {Room} room */
     getSources: function(room) {
         let mem = room.memory;
-        if (mem && mem.sources && mem.sources_version === 2) {
+        if (mem && mem.sources && mem.sources.v === 3) {
             return mem.sources;
         } else {
-            mem.sources = {};
-            mem.sources_version = 2;
+            mem.sources = [];
+            mem.sources.v = 3;
             let sources = room.find(FIND_SOURCES);
             for (let sourcei in sources) {
                 if (!sources.hasOwnProperty(sourcei)) continue;
