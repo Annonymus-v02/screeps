@@ -79,7 +79,7 @@ module.exports = {
     getEnergy: function(creep, fromRuins = false) {
         if (fromRuins && this.salvageEnergy(creep)) return;
         if(!this.gatherEnergy(creep)) {
-            //this.mine(creep);
+            this.mine(creep);
         }
     },
     /** @param {Room} room */
