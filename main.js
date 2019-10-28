@@ -34,9 +34,9 @@ class _CreepConstants {
         };
 
         let body = {cost: 0, parts: []};
-        body.add = part=>{
+        body.add = function(part){
             body.parts.push(part);
-            cost += BODYPART_COST[part];
+            this.cost += BODYPART_COST[part];
         };
 
         for (let i = 0; body.cost <= energy; i++) {
