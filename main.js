@@ -29,6 +29,7 @@ class _CreepConstants {
         sources = utils.getSources(room);
         for (let source in sources) {
             if (!sources.hasOwnProperty(source)) continue;
+            console.log(JSON.stringify(sources));
             opt['harvester'] += sources[source].spots;
             opt['hauler'] += sources[source].spots;
         }
