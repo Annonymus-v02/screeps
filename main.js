@@ -120,7 +120,7 @@ module.exports.loop = function () {
         if (leastPresent.role) {
             let newName = leastPresent.role + Game.time;
             let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
-                newName, {memory: {role: role, cb: [], spawn: 'Spawn1'}});
+                newName, {memory: {role: leastPresent.role, cb: [], spawn: 'Spawn1'}});
             if (res === ERR_NOT_ENOUGH_ENERGY && creepSum === 0) {
                 let energy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
                 if (energy >= 300) {
