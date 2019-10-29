@@ -107,8 +107,8 @@ module.exports.loop = function () {
             if (!creeps.hasOwnProperty(role)) continue;
             creepSum += creeps[role];
             if (!creeps.hasOwnProperty(role)) continue;
-            console.log(creeps[role], optimalCreeps[role]);
             if (creeps[role] < optimalCreeps[role]) {
+                console.log(!leastPresent.role, leastPresent.num);
                 if (!leastPresent.role || leastPresent.num > creeps[role]) {
                     leastPresent.role = role;
                     leastPresent.num = creeps[role];
