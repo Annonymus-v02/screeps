@@ -10,7 +10,7 @@ module.exports = {
         if (!creep.memory.source) {
             let sources = this.getSources(creep.room);
 
-            for (source of sources) {
+            for (let source of sources) {
                 if (source.spots > source.used) {
                     creep.memory.source = source.id;
                     break;
