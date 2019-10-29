@@ -120,6 +120,9 @@ module.exports.loop = function () {
             let newName = leastPresent.role + Game.time;
             let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
                 newName, {memory: {role: leastPresent.role, cb: [], spawn: 'Spawn1'}});
+            if(res !== ERR_NOT_ENOUGH_ENERGY && res !== 0) {
+                utils.err('Spawning new creep resulted in ' + res);
+            }
             console.log(res);
             if (res === ERR_NOT_ENOUGH_ENERGY && creepSum === 0) {
                 let energy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
@@ -161,6 +164,8 @@ module.exports.loop = function () {
             }
         }
     };
+    // spawn creeps a bit more often
+    ontick[32] = ontick[0];
     // only perform these expensive operations once every 64 ticks
     if (ontick[Game.time & 0x3F]) ontick[Game.time & 0x3F]();
     
