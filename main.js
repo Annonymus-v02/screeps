@@ -85,6 +85,7 @@ module.exports.loop = function () {
     // TODO: have haulers (et al) take from harvesters too.
     // TODO: IFF there is no harvester, make haulers mine
     // TODO: if there is no hauler, make one with as much energy as is available (min 300)
+    // TODO: make builders repair before upgrading if they have nothing to do.
 
     let ontick = [];
     // replenish creeps
@@ -119,6 +120,7 @@ module.exports.loop = function () {
             let newName = leastPresent.role + Game.time;
             let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
                 newName, {memory: {role: leastPresent.role, cb: [], spawn: 'Spawn1'}});
+            console.log(res);
             if (res === ERR_NOT_ENOUGH_ENERGY && creepSum === 0) {
                 let energy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
                 if (energy >= 300) {
