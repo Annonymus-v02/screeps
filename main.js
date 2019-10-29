@@ -22,7 +22,7 @@ class _CreepConstants {
     optimalCreeps(room) {
         let opt = {
             'harvester': 0,
-            'builder': 3,
+            'builder': 2,
             'upgrader': 1,
             'hauler': 0
         },
