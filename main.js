@@ -35,10 +35,10 @@ class _CreepConstants {
         const incrementalBodies = (role, i) => {
             switch(role) {
                 case 'harvester':
-                    if (i === 1) {
+                    if (i === 0) {
                         return MOVE;
                     }
-                    if (i === 2) {
+                    if (i === 1) {
                         return CARRY;
                     }
                     if (i % 10 === 0) {
@@ -53,7 +53,7 @@ class _CreepConstants {
                 case 'upgrader':
                     return [CARRY, MOVE, WORK][i % 3];
                 case 'hauler':
-                    if (i === 1) {
+                    if (i === 0) {
                         return WORK;
                     }
                     --i;
@@ -121,7 +121,6 @@ module.exports.loop = function () {
             let newName = leastPresent.role + Game.time;
             let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
                 newName, {memory: {role: leastPresent.role, cb: [], spawn: 'Spawn1'}});
-            console.log(leastPresent.role, availableEnergy);
             if (res === ERR_NOT_ENOUGH_ENERGY && creepSum === 0) {
                 let energy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
                 if (energy >= 300) {
