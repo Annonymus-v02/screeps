@@ -15,7 +15,7 @@ module.exports = {
 
         if(creep.memory.gathering) {
             if(!utils.gatherEnergy(creep) && !utils.salvageEnergy(creep)) {
-                utils.gatherUselessEnergy(creep, true);
+                utils.gatherUselessEnergy(creep, true) || utils.mineManual(creep);
             }
         } else {
             if (!utils.storeEnergy(creep)) {
