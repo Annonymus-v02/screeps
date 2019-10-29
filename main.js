@@ -86,6 +86,7 @@ module.exports.loop = function () {
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
     // TODO: have haulers (et al) take from harvesters too.
     // TODO: IFF there is no harvester, make haulers mine
+    // TODO: if there is no hauler, make one with as much energy as is available (min 300)
 
     let ontick = [];
     // replenish creeps
