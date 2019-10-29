@@ -115,7 +115,7 @@ module.exports.loop = function () {
                 }
             }
         }
-        console.log('attempting to spawn new creeps');
+        console.log('attempting to spawn new creeps: ', JSON.stringify(creeps), JSON.stringify(optimalCreeps));
 
         if (leastPresent.role) {
             let newName = leastPresent.role + Game.time;
