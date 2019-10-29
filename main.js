@@ -9,9 +9,9 @@ const utils = require("./misc.utils");
 class _CreepConstants {
     constructor() {
         this.creepTypes = {
+            'upgrader': 0,
             'harvester': 0,
             'builder': 0,
-            'upgrader': 0,
             'hauler': 0,
         }
     }
@@ -86,6 +86,7 @@ module.exports.loop = function () {
     // This may require automatically building storage there.
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
     // TODO: have haulers take from harvesters too.
+    // TODO: make the first harvester be an old-style harvester (which moves) and keep one of them at all times.
 
     let ontick = [];
     // replenish creeps
@@ -100,8 +101,6 @@ module.exports.loop = function () {
             // noinspection JSUnresolvedVariable
             creeps[Game.creeps[creep].memory.role]++
         }
-
-        console.log(JSON.stringify(creeps));
         
         for (let role in creeps) {
             if (!creeps.hasOwnProperty(role)) continue;
@@ -119,6 +118,10 @@ module.exports.loop = function () {
     ontick[2] = ()=> {
         for(let name in Memory.creeps) {
             if(!Game.creeps[name]) {
+                // TODO: remove creep from source
+                // TEMP
+                delete Memory.spawns['Spawn1'].sources;
+                // if (Memory.creeps[name].room && Memory.creeps[name].source) Memory.rooms[Memory.creeps[name].room].sources
                 delete Memory.creeps[name];
                 console.log('Clearing dead creep memory:', name);
             }

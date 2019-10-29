@@ -7,14 +7,22 @@ module.exports = {
         // if(creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
         //     creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
         // }
-        if (creep.memory.source) {
-            if(creep.harvest(Game.getObjectById(creep.memory.source)) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.getObjectById(creep.memory.source), {visualizePathStyle: {stroke: '#ffaa00'}});
-            }
-        } else {
+        if (!creep.memory.source) {
             let sources = this.getSources(creep.room);
-            // TODO: assign something
-            creep.memory.source = '5bbcafbb9099fc012e63b130';
+
+            for (source of sources) {
+                if (source.spots > source.used) {
+                    creep.memory.source = source.id;
+                    break;
+                }
+            }
+            if (!creep.memory.source) {
+                this.err('creep could not find available source');
+                return;
+            }
+        }
+        if(creep.harvest(Game.getObjectById(creep.memory.source)) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(Game.getObjectById(creep.memory.source), {visualizePathStyle: {stroke: '#ffaa00'}});
         }
     },
     /** @param {Creep} creep **/
@@ -108,6 +116,7 @@ module.exports = {
                 let source = sources[sourcei];
                 mem.sources[sourcei] = {};
                 mem.sources[sourcei].spots = 0;
+                mem.sources[sourcei].used = 0;
                 mem.sources[sourcei].id = source.id;
                 for (let i = -1; i <= 1; i++) {
                     for (let j = -1 ; j <= 1; j++) {
@@ -126,4 +135,7 @@ module.exports = {
             return mem.sources;
         }
     },
+    err: function(message) {
+        console.log(message);
+    }
 };
