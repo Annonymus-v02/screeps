@@ -101,14 +101,22 @@ module.exports.loop = function () {
             // noinspection JSUnresolvedVariable
             creeps[Game.creeps[creep].memory.role]++
         }
-        
+
+        let leastPresent = {};
+
         for (let role in creeps) {
             if (!creeps.hasOwnProperty(role)) continue;
             if(creeps[role] < optimalCreeps[role]) {
-                let newName = role + Game.time;
-                Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
+                if(!leastPresent.role || leastPresent.num > creeps[role]){
+                    leastPresent.role = role;
+                    leastPresent.num = creeps[role];
+                }
+            }
+
+            if (leastPresent.role) {
+                let newName = leastPresent.role + Game.time;
+                Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy), newName,
                     {memory: {role: role, cb: [], spawn: 'Spawn1'}});
-                break;
             }
         }
     };

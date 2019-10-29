@@ -96,7 +96,7 @@ module.exports = {
     /** @param {Creep} creep
      * @param {Boolean} fromRuins **/
     getEnergy: function(creep, fromRuins = false) {
-        // TODO: roomify this. Actually make it memory-based on spawn
+        // TODO: roomify this. Actually, make it memory-based on spawn
         let hasHarvester = false;
         for (let creep in Game.creeps) {
             if (creep.memory.role === 'harvester'){
