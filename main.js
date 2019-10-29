@@ -115,6 +115,7 @@ module.exports.loop = function () {
                 }
             }
         }
+        console.log(creeps, leastPresent);
 
         if (leastPresent.role) {
             let newName = leastPresent.role + Game.time;
