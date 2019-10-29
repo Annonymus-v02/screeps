@@ -85,8 +85,8 @@ module.exports.loop = function () {
     // TODO: change the way harvesters work: make them sit at a source and extract forever, then have haulers come pick up the energy.
     // This may require automatically building storage there.
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
-    // TODO: have haulers take from harvesters too.
-    // TODO: make the first harvester be an old-style harvester (which moves) and keep one of them at all times.
+    // TODO: have haulers (et al) take from harvesters too.
+    // TODO: IFF there is no harvester, make haulers mine
 
     let ontick = [];
     // replenish creeps
@@ -107,7 +107,7 @@ module.exports.loop = function () {
             if(creeps[role] < optimalCreeps[role]) {
                 let newName = role + Game.time;
                 Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(role, availableEnergy), newName,
-                    {memory: {role: role, cb: []}});
+                    {memory: {role: role, cb: [], spawn: 'Spawn1'}});
                 break;
             }
         }
@@ -144,6 +144,7 @@ module.exports.loop = function () {
     };
     // only perform these expensive operations once every 64 ticks
     if (ontick[Game.time & 0x3F]) ontick[Game.time & 0x3F]();
+    console.log(Game.time & 0x3F, ontick[Game.time & 0x3F]);
     
     // for debugging
     if (Memory.debug) {

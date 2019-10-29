@@ -13,6 +13,7 @@ module.exports = {
             for (let source of sources) {
                 if (source.spots > source.used) {
                     creep.memory.source = source.id;
+                    // TODO: increment sources used
                     break;
                 }
             }
