@@ -47,7 +47,6 @@ class _CreepConstants {
                     if (i % 5 === 0) {
                         return CARRY;
                     }
-                    i -= Math.floor(i / 5) + 2;
                     return WORK;
                 case 'builder':
                     return [CARRY, MOVE, WORK, CARRY, MOVE][i % 5];
@@ -144,7 +143,6 @@ module.exports.loop = function () {
     };
     // only perform these expensive operations once every 64 ticks
     if (ontick[Game.time & 0x3F]) ontick[Game.time & 0x3F]();
-    console.log(Game.time & 0x3F, ontick[Game.time & 0x3F]);
     
     // for debugging
     if (Memory.debug) {
