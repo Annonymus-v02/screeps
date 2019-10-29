@@ -119,7 +119,7 @@ module.exports.loop = function () {
             if(!Game.creeps[name]) {
                 // TODO: remove creep from source
                 // TEMP
-                delete Memory.spawns['Spawn1'].sources;
+                delete Game.spawns['Spawn1'].room.memory.sources;
                 // if (Memory.creeps[name].room && Memory.creeps[name].source) Memory.rooms[Memory.creeps[name].room].sources
                 delete Memory.creeps[name];
                 console.log('Clearing dead creep memory:', name);
