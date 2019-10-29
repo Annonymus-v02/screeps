@@ -104,6 +104,7 @@ module.exports = {
                 break;
             }
         }
+        console.log(hasHarvester);
         if(!hasHarvester){
             let source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
             if(creep.harvest(source) === ERR_NOT_IN_RANGE) {
