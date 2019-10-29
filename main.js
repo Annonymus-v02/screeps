@@ -144,10 +144,9 @@ module.exports.loop = function () {
     ontick[2] = ()=> {
         for(let name in Memory.creeps) {
             if(!Game.creeps[name]) {
-                // TODO: remove creep from source
-                // TEMP
-                delete Game.spawns['Spawn1'].room.memory.sources;
-                // if (Memory.creeps[name].room && Memory.creeps[name].source) Memory.rooms[Memory.creeps[name].room].sources
+                if (Memory.creeps[name].source) {
+                    --Game.spawns[Memory.creeps[name].spawn].room.memory.sources[Memory.creeps[name].source];
+                }
                 delete Memory.creeps[name];
                 console.log('Clearing dead creep memory:', name);
             }

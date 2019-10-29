@@ -10,10 +10,11 @@ module.exports = {
         if (!creep.memory.source) {
             let sources = this.getSources(creep.room);
 
-            for (let source of sources) {
-                if (source.spots > source.used) {
-                    creep.memory.source = source.id;
-                    // TODO: increment sources used
+            for (let source in sources) {
+                if (!sources.hasOwnProperty(source)) continue;
+                if (sources[source].spots > sources[source].used) {
+                    creep.memory.source = source;
+                    sources[source].used++;
                     break;
                 }
             }
@@ -126,19 +127,18 @@ module.exports = {
     /** @param {Room} room */
     getSources: function(room) {
         let mem = room.memory;
-        if (mem && mem.sources && mem.sources.v === 3) {
+        if (mem && mem.sources && mem.sources.v === 4) {
             return mem.sources;
         } else {
-            mem.sources = [];
-            mem.sources.v = 3;
+            mem.sources = {};
+            mem.sources.v = 4;
             let sources = room.find(FIND_SOURCES);
             for (let sourcei in sources) {
                 if (!sources.hasOwnProperty(sourcei)) continue;
                 let source = sources[sourcei];
-                mem.sources[sourcei] = {};
-                mem.sources[sourcei].spots = 0;
-                mem.sources[sourcei].used = 0;
-                mem.sources[sourcei].id = source.id;
+                mem.sources[source.id] = {};
+                mem.sources[source.id].spots = 0;
+                mem.sources[source.id].used = 0;
                 for (let i = -1; i <= 1; i++) {
                     for (let j = -1 ; j <= 1; j++) {
                         if (i || j) {
