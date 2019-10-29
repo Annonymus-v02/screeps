@@ -106,7 +106,7 @@ module.exports = {
         // TODO: roomify this. Actually, make it memory-based on spawn
         let hasHarvester = false;
         for (let creep in Game.creeps) {
-            if (creep.memory.role === 'harvester'){
+            if (Game.creeps[creep].memory.role === 'harvester'){
                 hasHarvester = true;
                 break;
             }
@@ -121,7 +121,7 @@ module.exports = {
         if(!this.gatherEnergy(creep)) {
             // TODO: stop mining and have the harvesters reserve a spot on their source.
             // Also when a creep dies, unregister their spot (while deleting memory)
-            this.mine(creep);
+            this.mineManual(creep);
         }
     },
     /** @param {Room} room */
@@ -159,14 +159,7 @@ module.exports = {
     },
 
     err: function(message) {
-        // TODO: don't log if memory is full
         console.log(message);
-        if(!Memory.logs) {
-            Memory.logs = {};
-        }
-        if (!Memory.logs.err) {
-            Memory.logs.err = [];
-        }
-        Memory.logs.err.push(message);
+        Game.notify(message, 10);
     }
 };

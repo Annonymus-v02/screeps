@@ -79,8 +79,6 @@ const creepConstants = new _CreepConstants();
 
 module.exports.loop = function () {
 
-    // TODO: set up some error reporting mechanism that doesn't rely on the console. 
-    // Probably in a debug object in memory. Maybe send a mail for the more important ones.
     // TODO: change the way harvesters work: make them sit at a source and extract forever, then have haulers come pick up the energy.
     // This may require automatically building storage there.
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
