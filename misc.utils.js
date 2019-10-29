@@ -29,7 +29,7 @@ module.exports = {
 
     mineManual: function(creep) {
         // TODO: make better
-        mine(creep);
+        this.mine(creep);
     },
     /** @param {Creep} creep **/
     upgradeController: function(creep) {
