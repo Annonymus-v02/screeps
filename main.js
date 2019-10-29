@@ -71,6 +71,7 @@ class _CreepConstants {
             body.add(incrementalBodies(role,i));
         }
         body.parts.pop();
+        console.log(JSON.stringify(body));
         return body.parts;
     }
 }
