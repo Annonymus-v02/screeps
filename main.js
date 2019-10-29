@@ -114,6 +114,8 @@ module.exports.loop = function () {
                 }
             }
 
+            console.log(JSON.stringify(creeps, leastPresent));
+
             if (leastPresent.role) {
                 let newName = leastPresent.role + Game.time;
                 let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
