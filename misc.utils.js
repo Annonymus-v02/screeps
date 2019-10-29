@@ -147,7 +147,7 @@ module.exports = {
                                 new RoomPosition(source.pos.x + i, source.pos.y + j, source.room.name),
                                 {maxOps: 10, maxRooms: 1, maxCost: 20})
                                 .incomplete) {
-                                mem.sources[sourcei].spots++;
+                                mem.sources[source.id].spots++;
                             }
                         }
                     }
