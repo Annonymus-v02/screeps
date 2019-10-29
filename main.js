@@ -65,14 +65,12 @@ class _CreepConstants {
         body.add = (part)=>{
             body.parts.push(part);
             body.cost += BODYPART_COST[part];
-            console.log(part, BODYPART_COST[part]);
         };
 
         for (let i = 0; body.cost <= energy; i++) {
             body.add(incrementalBodies(role,i));
         }
         body.parts.pop();
-        console.log(JSON.stringify(body));
         return body.parts;
     }
 }
