@@ -136,7 +136,16 @@ module.exports = {
             return mem.sources;
         }
     },
+
     err: function(message) {
+        // TODO: don't log if memory is full
         console.log(message);
+        if(!Memory.logs) {
+            Memory.logs = {};
+        }
+        if (!Memory.logs.err) {
+            Memory.logs.err = [];
+        }
+        Memory.logs.err.push(message);
     }
 };
