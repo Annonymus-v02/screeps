@@ -9,10 +9,10 @@ const utils = require("./misc.utils");
 class _CreepConstants {
     constructor() {
         this.creepTypes = {
+            'hauler': 0,
             'upgrader': 0,
             'harvester': 0,
             'builder': 0,
-            'hauler': 0,
         }
     }
 

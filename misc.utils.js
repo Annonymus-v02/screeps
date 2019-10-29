@@ -26,10 +26,12 @@ module.exports = {
             creep.moveTo(Game.getObjectById(creep.memory.source), {visualizePathStyle: {stroke: '#ffaa00'}});
         }
     },
-
+    /** @param {Creep} creep **/
     mineManual: function(creep) {
-        // TODO: make better
-        this.mine(creep);
+        let source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        if(creep.harvest(source) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+        }
     },
     /** @param {Creep} creep **/
     upgradeController: function(creep) {
