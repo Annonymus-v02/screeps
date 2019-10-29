@@ -107,15 +107,16 @@ module.exports.loop = function () {
             if (!creeps.hasOwnProperty(role)) continue;
             creepSum += creeps[role];
             if (!creeps.hasOwnProperty(role)) continue;
+            console.log(creeps[role], optimalCreeps[role]);
             if (creeps[role] < optimalCreeps[role]) {
                 if (!leastPresent.role || leastPresent.num > creeps[role]) {
                     leastPresent.role = role;
                     leastPresent.num = creeps[role];
                 }
             }
-
-            console.log(JSON.stringify(creeps, leastPresent));
         }
+
+        console.log(JSON.stringify(creeps, leastPresent));
 
         if (leastPresent.role) {
             let newName = leastPresent.role + Game.time;
