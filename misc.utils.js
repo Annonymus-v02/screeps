@@ -41,6 +41,19 @@ module.exports = {
         }
     },
     /** @param {Creep} creep **/
+    repair: function(creep) {
+        let damaged = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
+                return (struc.my
+                    || [STRUCTURE_WALL, STRUCTURE_CONTAINER, STRUCTURE_ROAD].includes(struc.structureType))
+                    && struc.hits < struc.hitsMax;
+            }});
+        if (!damaged) return false;
+        if(creep.repair(damaged) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(damaged, {visualizePathStyle: {stroke: '#ffaa00'}});
+        }
+        return true;
+    },
+    /** @param {Creep} creep **/
     storeEnergy: function(creep) {
         let store = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (struc) => {

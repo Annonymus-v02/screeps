@@ -23,7 +23,7 @@ module.exports = {
                     creep.moveTo(sites[0]);
                 }
             } else {
-                if (!utils.storeEnergy(creep)) {
+                if (!utils.storeEnergy(creep) && !utils.repair(creep)) {
                     utils.upgradeController(creep);
                 }
             }
