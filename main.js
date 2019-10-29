@@ -27,9 +27,10 @@ class _CreepConstants {
             'hauler': 0
         },
         sources = utils.getSources(room);
-        for (let source of sources) {
-            opt['harvester'] += source.spots;
-            opt['hauler'] += source.spots;
+        for (let source in sources) {
+            if (!sources.hasOwnProperty(source)) continue;
+            opt['harvester'] += sources[source].spots;
+            opt['hauler'] += sources[source].spots;
         }
         return opt;
     }
