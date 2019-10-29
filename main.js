@@ -107,28 +107,29 @@ module.exports.loop = function () {
             if (!creeps.hasOwnProperty(role)) continue;
             creepSum += creeps[role];
             if (!creeps.hasOwnProperty(role)) continue;
-            if(creeps[role] < optimalCreeps[role]) {
-                if(!leastPresent.role || leastPresent.num > creeps[role]){
+            if (creeps[role] < optimalCreeps[role]) {
+                if (!leastPresent.role || leastPresent.num > creeps[role]) {
                     leastPresent.role = role;
                     leastPresent.num = creeps[role];
                 }
             }
 
             console.log(JSON.stringify(creeps, leastPresent));
+        }
 
-            if (leastPresent.role) {
-                let newName = leastPresent.role + Game.time;
-                let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
-                    newName, {memory: {role: role, cb: [], spawn: 'Spawn1'}});
-                if (res === ERR_NOT_ENOUGH_ENERGY && creepSum === 0) {
-                    let energy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
-                    if (energy >= 300) {
-                        Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, energy),
-                            'hauler' + Game.time, {memory: {role: 'hauler', cb: [], spawn: 'Spawn1'}})
-                    }
+        if (leastPresent.role) {
+            let newName = leastPresent.role + Game.time;
+            let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
+                newName, {memory: {role: role, cb: [], spawn: 'Spawn1'}});
+            if (res === ERR_NOT_ENOUGH_ENERGY && creepSum === 0) {
+                let energy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
+                if (energy >= 300) {
+                    Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, energy),
+                        'hauler' + Game.time, {memory: {role: 'hauler', cb: [], spawn: 'Spawn1'}})
                 }
             }
         }
+
     };
     // UNUSED
     ontick[1] = ()=> {};
