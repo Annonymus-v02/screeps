@@ -230,6 +230,7 @@ module.exports.loop = function () {
             }
         } catch (err) {
             utils.err(err);
+            utils.err(err.stackTrace);
         }
     }
 
