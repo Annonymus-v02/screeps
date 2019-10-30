@@ -106,11 +106,9 @@ module.exports.loop = function () {
         }
 
         let leastPresent = {};
-        let creepSum  = 0;
 
         for (let role in creeps) {
             if (!creeps.hasOwnProperty(role)) continue;
-            creepSum += creeps[role];
             if (!creeps.hasOwnProperty(role)) continue;
             if (creeps[role] < optimalCreeps[role]) {
                 if (!leastPresent.role || leastPresent.num > creeps[role]) {
@@ -121,6 +119,14 @@ module.exports.loop = function () {
         }
         console.log('attempting to spawn new creeps: ', JSON.stringify(creeps), JSON.stringify(optimalCreeps));
 
+        if (creeps['hauler'] === 0) {
+            let energy = Game.spawns['Spawn1'].room.energyAvailable;
+            if (energy >= 300) {
+                Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody('hauler', energy),
+                    'hauler' + Game.time, {memory: {role: 'hauler', cb: [], spawn: Game.spawns['Spawn1'].name}})
+            }
+        }
+
         if (leastPresent.role) {
             let newName = leastPresent.role + Game.time;
             let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
@@ -129,13 +135,7 @@ module.exports.loop = function () {
                 utils.err('Spawning new creep resulted in ' + res);
             }
             console.log(res);
-            if (res === ERR_NOT_ENOUGH_ENERGY && creepSum === 0) {
-                let energy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
-                if (energy >= 300) {
-                    Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, energy),
-                        'hauler' + Game.time, {memory: {role: 'hauler', cb: [], spawn: Game.spawns['Spawn1'].name}})
-                }
-            }
+
         }
 
     };
