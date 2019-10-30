@@ -40,14 +40,25 @@ module.exports = {
             creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
     },
-    /** @param {Creep} creep **/
-    repair: function(creep) {
+    /** @param {Creep} creep *
+     * @param layer - internal value, do not set
+     */
+    repair: function(creep, layer) {
+        // TODO: unify tower and creep repair
+        let what;
+        switch (layer) {
+            case 0: what = [STRUCTURE_CONTAINER, STRUCTURE_ROAD]; break;
+            case 1: what = [STRUCTURE_WALL]; break;
+            default:
+                this.err('repair called with invalid layer');
+                what = [STRUCTURE_SPAWN, STRUCTURE_EXTENSION];
+        }
         let damaged = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
                 return (struc.my
-                    || [STRUCTURE_WALL, STRUCTURE_CONTAINER, STRUCTURE_ROAD].includes(struc.structureType))
+                    || what.includes(struc.structureType))
                     && struc.hits < struc.hitsMax;
             }});
-        if (!damaged) return false;
+        if (!damaged) return layer < 1 ? repair(creep, layer + 1) : false;
         if(creep.repair(damaged) === ERR_NOT_IN_RANGE) {
             creep.moveTo(damaged, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
@@ -192,7 +203,7 @@ module.exports = {
     },
 
     err: function(message) {
-        console.log(message);
+        console.log('Error:', message);
         Game.notify(message, 10);
     }
 };
