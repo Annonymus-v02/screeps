@@ -208,6 +208,7 @@ module.exports.loop = function () {
     }
 
     // execute individual creep's  actions
+    let cachedError;
     for (let name in Game.creeps) {
         let creep = Game.creeps[name];
         if (creep.spawning) continue;
@@ -229,10 +230,10 @@ module.exports.loop = function () {
                     console.log('Unknown role:', creep.memory.role);
             }
         } catch (err) {
-            utils.err(err);
-            utils.err(err.stackTrace);
+            if (!cachedError) cachedError = err;
         }
     }
+    if(cachedError) throw cachedError;
 
     for (let tower of Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {filter: (struc)=>{return struc.structureType === STRUCTURE_TOWER}})) {
         roleTower.run(tower);
