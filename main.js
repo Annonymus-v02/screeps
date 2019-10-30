@@ -4,6 +4,7 @@ const roleHarvester = require('./role.harvester');
 const roleUpgrader = require('./role.upgrader');
 const roleBuilder = require('./role.builder');
 const roleHauler = require('./role.hauler');
+const roleTower = require('./role.tower');
 const utils = require("./misc.utils");
 
 class _CreepConstants {
@@ -87,9 +88,8 @@ module.exports.loop = function () {
     // This may require automatically building storage there.
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
     // TODO: have haulers (et al) take from harvesters too.
-    // TODO: IFF there is no harvester, make haulers mine
-    // TODO: if there is no hauler, make one with as much energy as is available (min 300)
-    // TODO: make builders repair before upgrading if they have nothing to do.
+    // TODO: have spawns renew any creeps that come close to it.
+    // TODO: spawnify code
 
     let ontick = [];
     // replenish creeps
@@ -231,17 +231,7 @@ module.exports.loop = function () {
     }
 
     for (let tower of Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {filter: (struc)=>{return struc.structureType === STRUCTURE_TOWER}})) {
-        let hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (hostile) {
-            tower.attack(hostile);
-        } else {
-            let damaged = tower.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
-                return (struc.my
-                     || [STRUCTURE_WALL, STRUCTURE_CONTAINER, STRUCTURE_ROAD].includes(struc.structureType))
-                     && struc.hits < struc.hitsMax;
-            }});
-            tower.repair(damaged);
-        }
+        roleTower.run(tower);
     }
     
 };
