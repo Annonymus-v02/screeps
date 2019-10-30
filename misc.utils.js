@@ -43,7 +43,7 @@ module.exports = {
     /** @param {Creep} creep *
      * @param layer - internal value, do not set
      */
-    repair: function(creep, layer) {
+    repair: function(creep, layer = 0) {
         // TODO: unify tower and creep repair
         let what;
         switch (layer) {
@@ -51,7 +51,7 @@ module.exports = {
             case 1: what = [STRUCTURE_WALL]; break;
             default:
                 this.err('repair called with invalid layer');
-                what = [STRUCTURE_SPAWN, STRUCTURE_EXTENSION];
+                what = [STRUCTURE_CONTAINER, STRUCTURE_ROAD];
         }
         let damaged = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
                 return (struc.my
