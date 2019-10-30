@@ -79,12 +79,14 @@ module.exports = {
         }
         return true;
     },
-    /** @param {Creep} creep **/
-    salvageEnergy: function(creep) {
-        let source = creep.pos.findClosestByPath(FIND_RUINS, {filter: struc=>{
+    /** @param {Creep} creep *
+     * @param from
+     */
+    salvageEnergy: function(creep, from = FIND_RUINS) {
+        let source = creep.pos.findClosestByPath(from, {filter: struc=>{
             return struc.store && struc.store[RESOURCE_ENERGY] > 0;
             }});
-        if (source === null) return false;
+        if (source === null) return this.salvageEnergy(creep, FIND_TOMBSTONES);
         // noinspection JSCheckFunctionSignatures
         if(creep.withdraw(sources[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
