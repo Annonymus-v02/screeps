@@ -33,6 +33,7 @@ class _CreepConstants {
             opt['harvester'] += sources[source].spots;
             opt['hauler'] += sources[source].spots;
         }
+        opt['hauler'] = Math.floor(opt['hauler'] / 2);
         return opt;
     }
 
@@ -90,6 +91,7 @@ module.exports.loop = function () {
     // TODO: have haulers (et al) take from harvesters too.
     // TODO: have spawns renew any creeps that come close to it.
     // TODO: spawnify code
+    // TODO: find a way to prevent haulers from gathering around a single target (e.g. a tower)
 
     let ontick = [];
     // replenish creeps
