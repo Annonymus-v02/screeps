@@ -229,7 +229,7 @@ module.exports.loop = function () {
                     console.log('Unknown role:', creep.memory.role);
             }
         } catch (err) {
-            utils.err('creep crashed: ' + JSON.stringify(err));
+            utils.err('creep crashed: ' + err);
         }
     }
 
