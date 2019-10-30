@@ -150,8 +150,8 @@ module.exports.loop = function () {
             if(!Game.creeps[name]) {
                 if (Memory.creeps[name].source) {
                     utils.err(Memory.creeps[name].spawn);
-                    utils.err(Game.spawns[Memory.creeps[name].spawn].room.memory.sources);
-                    --Game.spawns[Memory.creeps[name].spawn].room.memory.sources[Memory.creeps[name].source];
+                    utils.err(JSON.stringify(Game.spawns[Memory.creeps[name].spawn].room.memory.sources));
+                    --Game.spawns[Memory.creeps[name].spawn].room.memory.sources[Memory.creeps[name].source].spots;
                 }
                 delete Memory.creeps[name];
                 console.log('Clearing dead creep memory:', name);
@@ -229,7 +229,7 @@ module.exports.loop = function () {
                     console.log('Unknown role:', creep.memory.role);
             }
         } catch (err) {
-            utils.err(JSON.stringify(err));
+            utils.err('creep crashed: ' + JSON.stringify(err));
         }
     }
 
