@@ -55,6 +55,7 @@ module.exports = {
     },
     /** @param {Creep} creep **/
     storeEnergy: function(creep) {
+        // TODO: work in layers
         let store = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (struc) => {
                 // TODO: eventually add storage and containers here
@@ -81,6 +82,7 @@ module.exports = {
     },
     /** @param {Creep} creep **/
     salvageEnergy: function(creep) {
+        // TODO: FIND_STRUCTURES and filter for ruins/tombstones
         let source = creep.pos.findClosestByPath(FIND_RUINS, {filter: struc=>{
             return struc.store && struc.store[RESOURCE_ENERGY] > 0;
             }});

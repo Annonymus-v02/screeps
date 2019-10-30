@@ -125,6 +125,7 @@ module.exports.loop = function () {
                 Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody('hauler', energy),
                     'hauler' + Game.time, {memory: {role: 'hauler', cb: [], spawn: Game.spawns['Spawn1'].name}})
             }
+            return;
         }
 
         if (leastPresent.role) {
