@@ -124,7 +124,7 @@ module.exports.loop = function () {
         if (leastPresent.role) {
             let newName = leastPresent.role + Game.time;
             let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
-                newName, {memory: {role: leastPresent.role, cb: [], spawn: 'Spawn1'}});
+                newName, {memory: {role: leastPresent.role, cb: [], spawn: Game.spawns['Spawn1'].name}});
             if(res !== ERR_NOT_ENOUGH_ENERGY && res !== 0) {
                 utils.err('Spawning new creep resulted in ' + res);
             }
@@ -133,7 +133,7 @@ module.exports.loop = function () {
                 let energy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
                 if (energy >= 300) {
                     Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, energy),
-                        'hauler' + Game.time, {memory: {role: 'hauler', cb: [], spawn: 'Spawn1'}})
+                        'hauler' + Game.time, {memory: {role: 'hauler', cb: [], spawn: Game.spawns['Spawn1'].name}})
                 }
             }
         }
@@ -146,6 +146,7 @@ module.exports.loop = function () {
         for(let name in Memory.creeps) {
             if(!Game.creeps[name]) {
                 if (Memory.creeps[name].source) {
+                    console.log(Memory.creeps[name].spawn, Game.spawns[Memory.creeps[name].spawn].room.memory.sources);
                     --Game.spawns[Memory.creeps[name].spawn].room.memory.sources[Memory.creeps[name].source];
                 }
                 delete Memory.creeps[name];
