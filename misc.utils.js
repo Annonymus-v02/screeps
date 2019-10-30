@@ -118,8 +118,8 @@ module.exports = {
             }});
         if (!source) return layer < 1 ? this.salvageEnergy(creep, layer + 1) : false;
         // noinspection JSCheckFunctionSignatures
-        if(creep.withdraw(sources[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        if(creep.withdraw(source, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
         return true;
     },
