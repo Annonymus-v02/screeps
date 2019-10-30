@@ -167,6 +167,10 @@ module.exports.loop = function () {
                 console.log('anomalous creep without callback array found:', name);
                 creepMemory.cb = [];
             }
+            if (!creepMemory.spawn) {
+                console.log('anomalous creep without assigned spawn found:', name);
+                creepMemory.spawn = 'Spawn1';
+            }
         }
     };
     // spawn creeps a bit more often
