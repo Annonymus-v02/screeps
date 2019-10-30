@@ -45,9 +45,11 @@ module.exports = {
      */
     repair: function(agent, layer = 0) {
         let what;
+        let maxRepair = Infinity;
         switch (layer) {
             case 0: what = [STRUCTURE_CONTAINER, STRUCTURE_ROAD]; break;
-            case 1: what = [STRUCTURE_WALL]; break;
+            case 1: what = [STRUCTURE_WALL]; maxRepair = 5000000; break;
+            case 3: what = [STRUCTURE_WALL]; break;
             default:
                 this.err('repair called with invalid layer');
                 what = [STRUCTURE_CONTAINER, STRUCTURE_ROAD];
@@ -55,7 +57,8 @@ module.exports = {
         let damaged = agent.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
                 return (struc.my
                     || what.includes(struc.structureType))
-                    && struc.hits < struc.hitsMax;
+                    && struc.hits < struc.hitsMax
+                    && struc.hits < 5000000;
             }});
         if (!damaged) return layer < 1 ? this.repair(agent, layer + 1) : false;
         if(agent.repair(damaged) === ERR_NOT_IN_RANGE) {
