@@ -53,13 +53,23 @@ module.exports = {
         }
         return true;
     },
-    /** @param {Creep} creep **/
-    storeEnergy: function(creep) {
-        // TODO: work in layers
+    /** @param {Creep} creep *
+     * @param layer - internal value, do not set
+     */
+    storeEnergy: function(creep, layer = 0) {
+        let from;
+        switch (layer) {
+            case 0: from = [STRUCTURE_SPAWN, STRUCTURE_EXTENSION]; break;
+            case 1: from = [STRUCTURE_TOWER]; break;
+            case 2: from = [STRUCTURE_STORAGE]; break;
+            default:
+                this.err('storeEnergy called with invalid layer');
+                from = [STRUCTURE_SPAWN, STRUCTURE_EXTENSION];
+        }
         let store = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (struc) => {
-                // TODO: eventually add storage and containers here
-                return [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER].includes(struc.structureType) && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return from.includes(struc.structureType)
+                    && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         if (store) {
@@ -68,7 +78,7 @@ module.exports = {
             }
             return true;
         } else {
-            return false;
+            return layer < 2 ? this.storeEnergy(creep, layer + 1) : false;
         }
     },
     /** @param {Creep} creep **/
@@ -80,13 +90,22 @@ module.exports = {
         }
         return true;
     },
-    /** @param {Creep} creep **/
-    salvageEnergy: function(creep) {
-        // TODO: FIND_STRUCTURES and filter for ruins/tombstones
-        let source = creep.pos.findClosestByPath(FIND_RUINS, {filter: struc=>{
+    /** @param {Creep} creep *
+     * @param layer - internal value, do not set
+     */
+    salvageEnergy: function(creep, layer = 0) {
+        let from;
+        switch (layer) {
+            case 0: from = FIND_RUINS; break;
+            case 1: from = FIND_TOMBSTONES; break;
+            default:
+                this.err('salvageEnergy called with invalid layer');
+                from = FIND_RUINS;
+        }
+        let source = creep.pos.findClosestByPath(from, {filter: struc=>{
             return struc.store && struc.store[RESOURCE_ENERGY] > 0;
             }});
-        if (source === null) return false;
+        if (!source) return layer < 1 ? this.salvageEnergy(creep, layer + 1) : false;
         // noinspection JSCheckFunctionSignatures
         if(creep.withdraw(sources[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
