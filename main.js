@@ -22,10 +22,10 @@ class _CreepConstants {
 
     optimalCreeps(room) {
         let opt = {
+            'hauler': 0,
             'harvester': 0,
-            'builder': 2,
             'upgrader': 1,
-            'hauler': 0
+            'builder': 2,
         },
         sources = utils.getSources(room);
         for (let source in sources) {
