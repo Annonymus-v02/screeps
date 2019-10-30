@@ -8,12 +8,7 @@ module.exports = {
         if (hostile) {
             tower.attack(hostile);
         } else {
-            let damaged = tower.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
-                    return (struc.my
-                        || [STRUCTURE_WALL, STRUCTURE_CONTAINER, STRUCTURE_ROAD].includes(struc.structureType))
-                        && struc.hits < struc.hitsMax;
-                }});
-            tower.repair(damaged);
+            utils.repair(tower);
         }
     }
 };

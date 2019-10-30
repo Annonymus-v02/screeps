@@ -40,11 +40,10 @@ module.exports = {
             creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
     },
-    /** @param {Creep} creep *
+    /** @param {Creep | StructureTower} agent
      * @param layer - internal value, do not set
      */
-    repair: function(creep, layer = 0) {
-        // TODO: unify tower and creep repair
+    repair: function(agent, layer = 0) {
         let what;
         switch (layer) {
             case 0: what = [STRUCTURE_CONTAINER, STRUCTURE_ROAD]; break;
@@ -53,14 +52,14 @@ module.exports = {
                 this.err('repair called with invalid layer');
                 what = [STRUCTURE_CONTAINER, STRUCTURE_ROAD];
         }
-        let damaged = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
+        let damaged = agent.pos.findClosestByRange(FIND_STRUCTURES, {filter: (struc)=>{
                 return (struc.my
                     || what.includes(struc.structureType))
                     && struc.hits < struc.hitsMax;
             }});
-        if (!damaged) return layer < 1 ? repair(creep, layer + 1) : false;
-        if(creep.repair(damaged) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(damaged, {visualizePathStyle: {stroke: '#ffaa00'}});
+        if (!damaged) return layer < 1 ? repair(agent, layer + 1) : false;
+        if(agent.repair(damaged) === ERR_NOT_IN_RANGE) {
+            agent.moveTo(damaged, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
         return true;
     },
