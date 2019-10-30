@@ -147,7 +147,8 @@ module.exports.loop = function () {
         for(let name in Memory.creeps) {
             if(!Game.creeps[name]) {
                 if (Memory.creeps[name].source) {
-                    utils.err(Memory.creeps[name].spawn, Game.spawns[Memory.creeps[name].spawn].room.memory.sources);
+                    utils.err(Memory.creeps[name].spawn);
+                    utils.err(Game.spawns[Memory.creeps[name].spawn].room.memory.sources);
                     --Game.spawns[Memory.creeps[name].spawn].room.memory.sources[Memory.creeps[name].source];
                 }
                 delete Memory.creeps[name];
