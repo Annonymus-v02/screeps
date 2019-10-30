@@ -57,7 +57,7 @@ module.exports = {
                     || what.includes(struc.structureType))
                     && struc.hits < struc.hitsMax;
             }});
-        if (!damaged) return layer < 1 ? repair(agent, layer + 1) : false;
+        if (!damaged) return layer < 1 ? this.repair(agent, layer + 1) : false;
         if(agent.repair(damaged) === ERR_NOT_IN_RANGE) {
             agent.moveTo(damaged, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
