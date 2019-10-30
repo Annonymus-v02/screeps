@@ -61,7 +61,7 @@ module.exports = {
                 return [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER].includes(struc.structureType) && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
-        if (store !== null) {
+        if (store) {
             if(creep.transfer(store, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(store, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
@@ -79,14 +79,12 @@ module.exports = {
         }
         return true;
     },
-    /** @param {Creep} creep *
-     * @param from
-     */
-    salvageEnergy: function(creep, from = FIND_RUINS) {
-        let source = creep.pos.findClosestByPath(from, {filter: struc=>{
+    /** @param {Creep} creep **/
+    salvageEnergy: function(creep) {
+        let source = creep.pos.findClosestByPath(FIND_RUINS, {filter: struc=>{
             return struc.store && struc.store[RESOURCE_ENERGY] > 0;
             }});
-        if (source === null) return this.salvageEnergy(creep, FIND_TOMBSTONES);
+        if (source === null) return false;
         // noinspection JSCheckFunctionSignatures
         if(creep.withdraw(sources[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
