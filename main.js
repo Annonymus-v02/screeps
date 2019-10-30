@@ -96,51 +96,52 @@ module.exports.loop = function () {
     let ontick = [];
     // replenish creeps
     ontick[0] = ()=>{
-        if (Game.spawns['Spawn1'].spawning) return;
-        const optimalCreeps = creepConstants.optimalCreeps(Game.spawns['Spawn1'].room);
+        for (let spawn in Game.spawns) {
+            if(!Game.spawns.hasOwnProperty(spawn)) continue;
 
-        let availableEnergy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
-    
-        let creeps = creepConstants.creepTypes;
-        for (let creep in Game.creeps) {
-            // noinspection JSUnresolvedVariable
-            creeps[Game.creeps[creep].memory.role]++
-        }
+            if (Game.spawns[spawn].spawning) return;
+            const optimalCreeps = creepConstants.optimalCreeps(Game.spawns[spawn].room);
 
-        let leastPresent = {};
+            let creeps = creepConstants.creepTypes;
+            for (let creep in Game.creeps) {
+                creeps[Game.creeps[creep].memory.role]++
+            }
 
-        for (let role in creeps) {
-            if (!creeps.hasOwnProperty(role)) continue;
-            if (!creeps.hasOwnProperty(role)) continue;
-            if (creeps[role] < optimalCreeps[role]) {
-                if (!leastPresent.role || leastPresent.num > creeps[role]) {
-                    leastPresent.role = role;
-                    leastPresent.num = creeps[role];
+            if (creeps['hauler'] === 0) {
+                let energy = Game.spawns['Spawn1'].room.energyAvailable;
+                if (energy >= 300) {
+                    Game.spawns[spawns].spawnCreep(creepConstants.creepBody('hauler', energy),
+                        'hauler' + Game.time,
+                        {memory: {role: 'hauler', cb: [], spawn: Game.spawns[spawns].name}})
+                }
+                return;
+            }
+
+            let leastPresent = {};
+
+            for (let role in creeps) {
+                if (!creeps.hasOwnProperty(role)) continue;
+                if (creeps[role] < optimalCreeps[role]) {
+                    if (!leastPresent.role || leastPresent.num > creeps[role]) {
+                        leastPresent.role = role;
+                        leastPresent.num = creeps[role];
+                    }
                 }
             }
-        }
-        console.log('attempting to spawn new creeps: ', JSON.stringify(creeps), JSON.stringify(optimalCreeps));
+            console.log('['+spawn+']', 'attempting to spawn new creeps: ',
+                JSON.stringify(creeps), JSON.stringify(optimalCreeps));
 
-        if (creeps['hauler'] === 0) {
-            let energy = Game.spawns['Spawn1'].room.energyAvailable;
-            if (energy >= 300) {
-                Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody('hauler', energy),
-                    'hauler' + Game.time, {memory: {role: 'hauler', cb: [], spawn: Game.spawns['Spawn1'].name}})
+            if (leastPresent.role) {
+                let availableEnergy = Game.spawns[spawn].room.energyCapacityAvailable;
+                let newName = leastPresent.role + Game.time;
+                let res = Game.spawns[spawn].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
+                    newName, {memory: {role: leastPresent.role, cb: [], spawn: Game.spawns[spawn].name}});
+                if(res !== ERR_NOT_ENOUGH_ENERGY && res !== 0) {
+                    utils.err('Spawning new creep resulted in ' + res);
+                }
+                console.log(res);
             }
-            return;
         }
-
-        if (leastPresent.role) {
-            let newName = leastPresent.role + Game.time;
-            let res = Game.spawns['Spawn1'].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
-                newName, {memory: {role: leastPresent.role, cb: [], spawn: Game.spawns['Spawn1'].name}});
-            if(res !== ERR_NOT_ENOUGH_ENERGY && res !== 0) {
-                utils.err('Spawning new creep resulted in ' + res);
-            }
-            console.log(res);
-
-        }
-
     };
     // UNUSED
     ontick[1] = ()=> {};
@@ -233,7 +234,8 @@ module.exports.loop = function () {
     }
     if(cachedError) throw cachedError;
 
-    for (let tower of Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {filter: (struc)=>{return struc.structureType === STRUCTURE_TOWER}})) {
+    for (let tower of Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES,
+        {filter: (struc)=>{return struc.structureType === STRUCTURE_TOWER}})) {
         roleTower.run(tower);
     }
     

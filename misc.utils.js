@@ -151,23 +151,8 @@ module.exports = {
     /** @param {Creep} creep
      * @param {Boolean} fromRuins **/
     getEnergy: function(creep, fromRuins = false) {
-        // let hasHarvester = false;
-        // for (let creep in Game.creeps) {
-        //     if (Game.creeps[creep].memory.role === 'harvester'){
-        //         hasHarvester = true;
-        //         break;
-        //     }
-        // }
-        // if(!hasHarvester){
-        //     let source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-        //     if(creep.harvest(source) === ERR_NOT_IN_RANGE) {
-        //         creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
-        //     }
-        // }
         if (fromRuins && this.salvageEnergy(creep)) return;
         if(!this.gatherEnergy(creep)) {
-            // TODO: stop mining and have the harvesters reserve a spot on their source.
-            // Also when a creep dies, unregister their spot (while deleting memory)
             this.mineManual(creep);
         }
     },
