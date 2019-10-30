@@ -13,8 +13,8 @@ class _CreepConstants {
     get creepTypes() {
         return {
             'hauler': 0,
-            'upgrader': 0,
             'harvester': 0,
+            'upgrader': 0,
             'builder': 0,
         }
     }
