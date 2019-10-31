@@ -23,7 +23,8 @@ module.exports = {
                 return;
             }
         }
-        if(creep.harvest(Game.getObjectById(creep.memory.source)) === ERR_NOT_IN_RANGE) {
+        let res = creep.harvest(Game.getObjectById(creep.memory.source));
+        if(res === ERR_NOT_IN_RANGE || res ===  ERR_NOT_ENOUGH_RESOURCES) {
             creep.moveTo(Game.getObjectById(creep.memory.source), {visualizePathStyle: {stroke: '#ffaa00'}});
         }
     },
