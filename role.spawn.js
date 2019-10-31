@@ -7,11 +7,11 @@ module.exports = {
     run: function(spawn) {
         // draw spawning creeps
         if(spawn.spawning) {
-            let spawningCreep = Game.creeps[Game.spawns[spawn].spawning.name];
-            Game.spawns[spawn].room.visual.text(
+            let spawningCreep = Game.creeps[spawn.spawning.name];
+            spawn.room.visual.text(
                 '\u{1F6E0}️' + spawningCreep.memory.role,
-                Game.spawns[spawn].pos.x + 1,
-                Game.spawns[spawn].pos.y,
+                spawn.pos.x + 1,
+                spawn.pos.y,
                 {align: 'left', opacity: 0.8});
         }
 
