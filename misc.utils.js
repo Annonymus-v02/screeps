@@ -98,9 +98,21 @@ module.exports = {
     /** @param {Creep} creep **/
     gatherEnergy: function(creep) {
         let source = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
-        if (source === null) return false;
+        if (source === null) return takeEnergy;
         if(creep.pickup(source) === ERR_NOT_IN_RANGE) {
             creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+        }
+        return true;
+    },
+    /** @param {Creep} creep **/
+    takeEnergy: function(creep) {
+        let harvester = creep.pos.findClosestByRange(FIND_MY_CREEPS, {filter: (harvester) => {
+            return harvester.memory.role === 'harvester'
+                && harvester.store[RESOURCE_ENERGY] > 0;
+            }});
+        if (harvester === null) return false;
+        if(harvester.transfer(creep, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(harvester, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
         return true;
     },

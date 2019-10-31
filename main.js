@@ -89,7 +89,6 @@ module.exports.loop = function () {
     // This may require automatically building storage there.
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
     // TODO: have haulers (et al) take from harvesters too.
-    // TODO: have spawns renew any creeps that come close to it.
     // TODO: find a way to prevent haulers from gathering around a single target (e.g. a tower)
 
     let ontick = [];
