@@ -208,7 +208,8 @@ module.exports.loop = function () {
         for (let i = -1; i < 1; i++) {
             for (let j = -1; j < 1; j++) {
                 if (i || j) {
-                    let creeps = new RoomPosition(i, j, Game.spawns[spawn].room.name).lookFor(LOOK_CREEPS);
+                    let creeps = new RoomPosition(Game.spawns.pos.x + i, Game.spawns.pos.y + j,
+                        Game.spawns[spawn].room.name).lookFor(LOOK_CREEPS);
                     if (creeps.length > 0) {
                         Game.spawns[spawn].renewCreep(creeps[0]);
                     }
