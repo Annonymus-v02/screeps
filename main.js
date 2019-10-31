@@ -5,83 +5,8 @@ const roleUpgrader = require('./role.upgrader');
 const roleBuilder = require('./role.builder');
 const roleHauler = require('./role.hauler');
 const roleTower = require('./role.tower');
-const utils = require("./misc.utils");
-
-class _CreepConstants {
-    constructor() {
-
-    }
-    get creepTypes() {
-        return {
-            'hauler': 0,
-            'harvester': 0,
-            'upgrader': 0,
-            'builder': 0,
-        }
-    }
-
-    optimalCreeps(room) {
-        let opt = {
-            'hauler': 0,
-            'harvester': 0,
-            'upgrader': 1,
-            'builder': 2,
-        },
-        sources = utils.getSources(room);
-        for (let source in sources) {
-            if (!sources.hasOwnProperty(source) || source === 'v') continue;
-            opt['harvester'] += sources[source].spots;
-            opt['hauler'] += sources[source].spots;
-        }
-        opt['hauler'] = Math.floor(opt['hauler'] / 2);
-        return opt;
-    }
-
-    creepBody(role, energy) {
-        const incrementalBodies = (role, i) => {
-            switch(role) {
-                case 'harvester':
-                    if (i === 0) {
-                        return MOVE;
-                    }
-                    if (i === 1) {
-                        return CARRY;
-                    }
-                    if (i % 10 === 0) {
-                        return MOVE;
-                    }
-                    if (i % 5 === 0) {
-                        return CARRY;
-                    }
-                    return WORK;
-                case 'builder':
-                    return [CARRY, MOVE, WORK, CARRY, MOVE][i % 5];
-                case 'upgrader':
-                    return [CARRY, MOVE, WORK][i % 3];
-                case 'hauler':
-                    if (i === 0) {
-                        return WORK;
-                    }
-                    --i;
-                    return [CARRY, CARRY, MOVE][i % 3];
-            }
-        };
-
-        let body = {cost: 0, parts: []};
-        body.add = (part)=>{
-            body.parts.push(part);
-            body.cost += BODYPART_COST[part];
-        };
-
-        for (let i = 0; body.cost <= energy; i++) {
-            body.add(incrementalBodies(role,i));
-        }
-        body.parts.pop();
-        return body.parts;
-    }
-}
-
-const creepConstants = new _CreepConstants();
+const roleSpawn = require('./role.spawn');
+// const utils = require("./misc.utils");
 
 module.exports.loop = function () {
 
@@ -97,48 +22,7 @@ module.exports.loop = function () {
         for (let spawn in Game.spawns) {
             if(!Game.spawns.hasOwnProperty(spawn)) continue;
 
-            if (Game.spawns[spawn].spawning) return;
-            const optimalCreeps = creepConstants.optimalCreeps(Game.spawns[spawn].room);
-
-            let creeps = creepConstants.creepTypes;
-            for (let creep in Game.creeps) {
-                creeps[Game.creeps[creep].memory.role]++
-            }
-
-            if (creeps['hauler'] === 0) {
-                let energy = Game.spawns['Spawn1'].room.energyAvailable;
-                if (energy >= 300) {
-                    Game.spawns[spawns].spawnCreep(creepConstants.creepBody('hauler', energy),
-                        'hauler' + Game.time,
-                        {memory: {role: 'hauler', cb: [], spawn: Game.spawns[spawns].name}})
-                }
-                return;
-            }
-
-            let leastPresent = {};
-
-            for (let role in creeps) {
-                if (!creeps.hasOwnProperty(role)) continue;
-                if (creeps[role] < optimalCreeps[role]) {
-                    if (!leastPresent.role || leastPresent.num > creeps[role]) {
-                        leastPresent.role = role;
-                        leastPresent.num = creeps[role];
-                    }
-                }
-            }
-            console.log('['+spawn+']', 'attempting to spawn new creeps: ',
-                JSON.stringify(creeps), JSON.stringify(optimalCreeps));
-
-            if (leastPresent.role) {
-                let availableEnergy = Game.spawns[spawn].room.energyCapacityAvailable;
-                let newName = leastPresent.role + Game.time;
-                let res = Game.spawns[spawn].spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
-                    newName, {memory: {role: leastPresent.role, cb: [], spawn: Game.spawns[spawn].name}});
-                if(res !== ERR_NOT_ENOUGH_ENERGY && res !== 0) {
-                    utils.err('Spawning new creep resulted in ' + res);
-                }
-                console.log(res);
-            }
+            roleSpawn.run(Game.spawns[spawn]);
         }
     };
     // UNUSED
