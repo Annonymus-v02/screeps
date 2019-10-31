@@ -205,6 +205,7 @@ module.exports.loop = function () {
                 {align: 'left', opacity: 0.8});
         }
 
+        /* // TODO: uncomment
         for (let i = -1; i < 1; i++) {
             for (let j = -1; j < 1; j++) {
                 if (i || j) {
@@ -216,6 +217,7 @@ module.exports.loop = function () {
                 }
             }
         }
+        */
     }
 
     // execute individual creep's  actions
