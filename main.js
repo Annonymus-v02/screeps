@@ -178,6 +178,7 @@ module.exports.loop = function () {
     };
     // spawn creeps a bit more often
     ontick[32] = ontick[0];
+    ontick[33]= ontick[2];
     // only perform these expensive operations once every 64 ticks
     if (ontick[Game.time & 0x3F]) ontick[Game.time & 0x3F]();
     
