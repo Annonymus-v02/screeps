@@ -98,7 +98,7 @@ module.exports = {
     /** @param {Creep} creep **/
     gatherEnergy: function(creep) {
         let source = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
-        if (source === null) return takeEnergy;
+        if (source === null) return this.takeEnergy;
         if(creep.pickup(source) === ERR_NOT_IN_RANGE) {
             creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
