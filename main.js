@@ -20,8 +20,6 @@ module.exports.loop = function () {
     // replenish creeps
     ontick[0] = ()=>{
         for (let spawn in Game.spawns) {
-            if(!Game.spawns.hasOwnProperty(spawn)) continue;
-
             roleSpawn.run(Game.spawns[spawn]);
         }
     };
@@ -78,27 +76,7 @@ module.exports.loop = function () {
     }
 
     for (let spawn in Game.spawns) {
-        // draw spawning creeps
-        if(Game.spawns[spawn].spawning) { 
-            let spawningCreep = Game.creeps[Game.spawns[spawn].spawning.name];
-            Game.spawns[spawn].room.visual.text(
-                '\u{1F6E0}️' + spawningCreep.memory.role,
-                Game.spawns[spawn].pos.x + 1, 
-                Game.spawns[spawn].pos.y, 
-                {align: 'left', opacity: 0.8});
-        }
-
-        for (let i = -1; i < 1; i++) {
-            for (let j = -1; j < 1; j++) {
-                if (i || j) {
-                    let creeps = new RoomPosition(Game.spawns[spawn].pos.x + i, Game.spawns[spawn].pos.y + j,
-                        Game.spawns[spawn].room.name).lookFor(LOOK_CREEPS);
-                    if (creeps.length > 0) {
-                        Game.spawns[spawn].renewCreep(creeps[0]);
-                    }
-                }
-            }
-        }
+        roleSpawn.run(Game.spawns[spawn]);
     }
 
     // execute individual creep's  actions
