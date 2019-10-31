@@ -20,7 +20,7 @@ module.exports.loop = function () {
     // replenish creeps
     ontick[0] = ()=>{
         for (let spawn in Game.spawns) {
-            roleSpawn.run(Game.spawns[spawn]);
+            roleSpawn.spawn(Game.spawns[spawn]);
         }
     };
     // UNUSED
