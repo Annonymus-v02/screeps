@@ -5,7 +5,7 @@ module.exports = {
     /** @param {Creep} creep **/
     run: function(creep) {
 	    if(creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-            let storage = creep.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: (struc)=>{
+            let storage = creep.pos.findInRange(FIND_STRUCTURES, 1, {filter: (struc)=>{
                 return struc.store && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }});
             if (storage.length > 0) {
