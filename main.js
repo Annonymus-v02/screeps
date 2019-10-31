@@ -90,7 +90,6 @@ module.exports.loop = function () {
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
     // TODO: have haulers (et al) take from harvesters too.
     // TODO: have spawns renew any creeps that come close to it.
-    // TODO: spawnify code
     // TODO: find a way to prevent haulers from gathering around a single target (e.g. a tower)
 
     let ontick = [];
@@ -195,8 +194,8 @@ module.exports.loop = function () {
         }
     }
 
-    // draw spawning creeps
     for (let spawn in Game.spawns) {
+        // draw spawning creeps
         if(Game.spawns[spawn].spawning) { 
             let spawningCreep = Game.creeps[Game.spawns[spawn].spawning.name];
             Game.spawns[spawn].room.visual.text(
@@ -204,6 +203,17 @@ module.exports.loop = function () {
                 Game.spawns[spawn].pos.x + 1, 
                 Game.spawns[spawn].pos.y, 
                 {align: 'left', opacity: 0.8});
+        }
+
+        for (let i = -1; i < 1; i++) {
+            for (let j = -1; j < 1; j++) {
+                if (i || j) {
+                    let creeps = new RoomPosition(i, j, Game.spawns[spawn].room.name).lookFor(LOOK_CREEPS);
+                    if (creeps.length > 0) {
+                        Game.spawns[spawn].renewCreep(creeps[0]);
+                    }
+                }
+            }
         }
     }
 
