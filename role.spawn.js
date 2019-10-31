@@ -61,7 +61,7 @@ module.exports = {
                 }
             }
         }
-        console.log('['+spawn+']', 'attempting to spawn new creeps: ',
+        console.log('['+spawn.name+']', 'attempting to spawn new creeps: ',
             JSON.stringify(creeps), JSON.stringify(optimalCreeps));
 
         if (leastPresent.role) {
