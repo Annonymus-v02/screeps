@@ -7,7 +7,7 @@ module.exports = {
         let hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (hostile) {
             tower.attack(hostile);
-        } else {
+        } else if(tower.store[RESOURCE_ENERGY] > 200) {
             utils.repair(tower);
         }
     }

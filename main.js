@@ -15,6 +15,19 @@ module.exports.loop = function () {
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
     // TODO: have haulers (et al) take from harvesters too.
     // TODO: find a way to prevent haulers from gathering around a single target (e.g. a tower)
+    // TODO: don't let towers exhaust all of their energy for repairs
+
+    // Don;t use this store data for a single tick - Just set a property on the relevant object for that
+    // TODO: redo this. It's ugly
+    if (Array.isArray(Memory.nextTick)) {
+        for (let i in Memory.nextTick){
+            if(!Memory.nextTick.hasOwnProperty(i)) continue;
+            let cb = Memory.nextTick[i];
+            if(!cb()) {
+                delete Memory.nextTick[i];
+            }
+        }
+    }
 
     let ontick = [];
     // replenish creeps
@@ -58,7 +71,7 @@ module.exports.loop = function () {
     };
     // spawn creeps a bit more often
     ontick[32] = ontick[0];
-    ontick[33]= ontick[2];
+    ontick[33] = ontick[2];
     // only perform these expensive operations once every 64 ticks
     if (ontick[Game.time & 0x3F]) ontick[Game.time & 0x3F]();
     
