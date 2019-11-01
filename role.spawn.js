@@ -44,7 +44,7 @@ module.exports = {
             let energy = spawn.room.energyAvailable;
             if (energy >= 300) {
                 spawn.spawnCreep(creepConstants.creepBody('hauler', energy),
-                    'hauler' + Game.time,
+                    'hauler' + (Game.time - 12170000),
                     {memory: {role: 'hauler', cb: [], spawn: spawn.name}})
             }
             return;
@@ -66,7 +66,7 @@ module.exports = {
 
         if (leastPresent.role) {
             let availableEnergy = spawn.room.energyCapacityAvailable;
-            let newName = leastPresent.role + Game.time;
+            let newName = leastPresent.role + (Game.time - 12170000);
             let res = spawn.spawnCreep(creepConstants.creepBody(leastPresent.role, availableEnergy),
                 newName, {memory: {role: leastPresent.role, cb: [], spawn: spawn.name}});
             if(res !== ERR_NOT_ENOUGH_ENERGY && res !== 0) {
