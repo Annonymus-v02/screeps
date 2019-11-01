@@ -83,7 +83,8 @@ module.exports = {
         let store = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (struc) => {
                 return from.includes(struc.structureType)
-                    && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    && !struc.reserved;
             }
         });
         if (store) {
@@ -97,7 +98,9 @@ module.exports = {
     },
     /** @param {Creep} creep **/
     gatherEnergy: function(creep) {
-        let source = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+        let source = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {filter: energy=>{
+            return !energy.reserved;
+            }});
         if (source === null) return this.takeEnergy;
         if(creep.pickup(source) === ERR_NOT_IN_RANGE) {
             creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -108,7 +111,8 @@ module.exports = {
     takeEnergy: function(creep) {
         let harvester = creep.pos.findClosestByRange(FIND_MY_CREEPS, {filter: (harvester) => {
             return harvester.memory.role === 'harvester'
-                && harvester.store[RESOURCE_ENERGY] > 0;
+                && harvester.store[RESOURCE_ENERGY] > 0
+                && !harvester.reserved;
             }});
         if (harvester === null) return false;
         if(harvester.transfer(creep, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
@@ -129,7 +133,9 @@ module.exports = {
                 from = FIND_RUINS;
         }
         let source = creep.pos.findClosestByPath(from, {filter: struc=>{
-            return struc.store && struc.store[RESOURCE_ENERGY] > 0;
+            return struc.store
+                && struc.store[RESOURCE_ENERGY] > 0
+                && !struc.reserved;
             }});
         if (!source) return layer < 1 ? this.salvageEnergy(creep, layer + 1) : false;
         // noinspection JSCheckFunctionSignatures
@@ -144,13 +150,15 @@ module.exports = {
         let usefulStores = ifExistsBetter ? creep.room.find(FIND_MY_STRUCTURES, {
             filter: (struc) => {
                 return [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER].includes(struc.structureType)
-                    && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    && struc.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    && !struc.reserved;
             }
         }) : [];
         let uselessStore = creep.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (struc) => {
                 return [STRUCTURE_STORAGE, STRUCTURE_CONTAINER].includes(struc.structureType)
-                    && struc.store[RESOURCE_ENERGY] > 0;
+                    && struc.store[RESOURCE_ENERGY] > 0
+                    && !struc.reserved;
             }
         });
         if (usefulStores.length > 0 && uselessStore !== null) {
