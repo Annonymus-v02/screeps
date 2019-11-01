@@ -88,6 +88,7 @@ module.exports = {
             }
         });
         if (store) {
+            store.reserved = true;
             if(creep.transfer(store, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(store, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
@@ -102,6 +103,7 @@ module.exports = {
             return !energy.reserved;
             }});
         if (source === null) return this.takeEnergy;
+        source.reserved = true;
         if(creep.pickup(source) === ERR_NOT_IN_RANGE) {
             creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
@@ -115,6 +117,7 @@ module.exports = {
                 && !harvester.reserved;
             }});
         if (harvester === null) return false;
+        harvester.reserved = true;
         if(harvester.transfer(creep, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(harvester, {visualizePathStyle: {stroke: '#ffaa00'}});
         }
@@ -138,6 +141,7 @@ module.exports = {
                 && !struc.reserved;
             }});
         if (!source) return layer < 1 ? this.salvageEnergy(creep, layer + 1) : false;
+        source.reserved = true;
         // noinspection JSCheckFunctionSignatures
         if(creep.withdraw(source, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -162,6 +166,7 @@ module.exports = {
             }
         });
         if (usefulStores.length > 0 && uselessStore !== null) {
+            uselessStore.reserved = true;
             if(creep.withdraw(uselessStore, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(uselessStore, {visualizePathStyle: {stroke: '#ffaa00'}});
             }

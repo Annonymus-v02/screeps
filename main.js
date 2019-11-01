@@ -15,7 +15,6 @@ module.exports.loop = function () {
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
     // TODO: have haulers (et al) take from harvesters too.
     // TODO: find a way to prevent haulers from gathering around a single target (e.g. a tower)
-    // TODO: don't let towers exhaust all of their energy for repairs
 
     // Don;t use this store data for a single tick - Just set a property on the relevant object for that
     // TODO: redo this. It's ugly
