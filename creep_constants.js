@@ -58,7 +58,7 @@ class _CreepConstants {
                         return WORK;
                     }
                     --i;
-                    return [CARRY, CARRY, MOVE][i % 3];
+                    return [MOVE, CARRY, CARRY][i % 3];
             }
         };
 
