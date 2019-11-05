@@ -17,7 +17,7 @@ module.exports = {
         if (!creep.memory.building) {
             utils.getEnergy(creep, true);
         } else {
-            let sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+            let sites = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
             if (sites.length !== 0) {
                 if (creep.build(sites[0]) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(sites[0]);
