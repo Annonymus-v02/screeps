@@ -178,7 +178,7 @@ module.exports = {
      * @param {Boolean} fromRuins **/
     getEnergy: function(creep, fromRuins = false) {
         if (fromRuins && this.salvageEnergy(creep)) return;
-        if(!this.gatherEnergy(creep)) {
+        if(!this.gatherEnergy(creep) && !gatherUselessEnergy(creep)) {
             this.mineManual(creep);
         }
     },

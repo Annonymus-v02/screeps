@@ -2,9 +2,7 @@
 const utils = require('./misc.utils');
 
 class _CreepConstants {
-    constructor() {
-
-    }
+    constructor() { }
 
     get creepTypes() {
         return {
@@ -12,6 +10,7 @@ class _CreepConstants {
             'harvester': 0,
             'upgrader': 0,
             'builder': 0,
+            'swapper': 0,
         }
     }
 
@@ -21,6 +20,7 @@ class _CreepConstants {
                 'harvester': 0,
                 'upgrader': 1,
                 'builder': 2,
+                'swapper': 1,
             },
             sources = utils.getSources(room);
         for (let source in sources) {
@@ -54,6 +54,12 @@ class _CreepConstants {
                 case 'upgrader':
                     return [CARRY, MOVE, WORK][i % 3];
                 case 'hauler':
+                    if (i === 0) {
+                        return WORK;
+                    }
+                    --i;
+                    return [MOVE, CARRY, CARRY][i % 3];
+                case 'swapper':
                     if (i === 0) {
                         return WORK;
                     }

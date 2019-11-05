@@ -10,13 +10,10 @@ const roleSpawn = require('./role.spawn');
 
 module.exports.loop = function () {
 
-    // TODO: change the way harvesters work: make them sit at a source and extract forever, then have haulers come pick up the energy.
-    // This may require automatically building storage there.
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
-    // TODO: have haulers (et al) take from harvesters too.
-    // TODO: find a way to prevent haulers from gathering around a single target (e.g. a tower)
+    // TODO: make a creep role that will only transfer energy from storage/containers to extensions and towers
 
-    // Don;t use this store data for a single tick - Just set a property on the relevant object for that
+    // Don't use this store data for a single tick - Just set a property on the relevant object for that
     // TODO: redo this. It's ugly
     if (Array.isArray(Memory.nextTick)) {
         for (let i in Memory.nextTick){
