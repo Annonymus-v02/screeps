@@ -11,7 +11,6 @@ const roleSpawn = require('./role.spawn');
 module.exports.loop = function () {
 
     // TODO: typed-creeps is broken. replace it with screeps autocomplete
-    // TODO: make a creep role that will only transfer energy from storage/containers to extensions and towers
 
     // Don't use this store data for a single tick - Just set a property on the relevant object for that
     // TODO: redo this. It's ugly

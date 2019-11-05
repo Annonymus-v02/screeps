@@ -20,7 +20,7 @@ module.exports = {
             let sites = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
             if (sites.length !== 0) {
                 if (creep.build(sites[0]) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sites[0]);
+                    creep.moveTo(sites[0], {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             } else {
                 if (!utils.repair(creep) && !utils.storeEnergy(creep)) {
